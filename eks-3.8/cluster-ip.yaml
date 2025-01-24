@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaz-clusterip-service
+  namespace: jaz-eks-activity
+spec:
+  type: ClusterIP
+  selector:
+    app: httpd-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 5678
