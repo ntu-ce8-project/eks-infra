@@ -4,7 +4,7 @@ metadata:
   name: jaz-nginx-deployment
   namespace: jaz-eks-activity
 spec:
-  replicas: 2
+  replicas: 100
   selector:
     matchLabels:
       app: nginx
@@ -13,7 +13,7 @@ spec:
       labels:
         app: nginx
     spec:
-      serviceAccountName: jaz-nginx-service-account
+      # serviceAccountName: jaz-nginx-service-account
       containers:
       - name: nginx
         image: nginx:latest
