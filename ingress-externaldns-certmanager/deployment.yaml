@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaz-echo-app
+  namespace: jaz-eks-activity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-app
+  template:
+    metadata:
+      labels:
+        app: echo-app
+    spec:
+      containers:
+      - name: echo-container
+        image: hashicorp/http-echo
+        args:
+          - "-text=Hello, Jaz!"
+        ports:
+        - containerPort: 5678
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaz2-echo-app
+  namespace: jaz2-eks-activity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-app
+  template:
+    metadata:
+      labels:
+        app: echo-app
+    spec:
+      containers:
+      - name: echo-container
+        image: hashicorp/http-echo
+        args:
+          - "-text=Hello, Jaz2!"
+        ports:
+        - containerPort: 5678

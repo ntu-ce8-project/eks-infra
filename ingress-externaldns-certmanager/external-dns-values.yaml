@@ -1,0 +1,8 @@
+provider:
+  name: aws
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/externaldns-oidc-role  # The external-dns role ARN
+env:
+  - name: AWS_DEFAULT_REGION
+    value: ap-southeast-1 # change to region where EKS is installed

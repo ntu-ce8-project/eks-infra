@@ -20,6 +20,8 @@ module "eks" {
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = false
 
+  enable_irsa = true
+
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.public_subnets
 
@@ -38,7 +40,7 @@ module "eks" {
     for arn in local.user_arn_list : arn => {
       principal_arn = arn
       policy_associations = {
-        example = {
+        adminaccess = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
           access_scope = {
             type = "cluster"
