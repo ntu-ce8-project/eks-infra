@@ -55,7 +55,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.8.1"
 
-  name                    = "c8_eks_vpc"
+  name                    = "eks_shared_vpc"
   cidr                    = "172.31.0.0/16"
   azs                     = data.aws_availability_zones.available.names
   public_subnets          = ["172.31.101.0/24", "172.31.102.0/24"]
