@@ -40,7 +40,7 @@ module "eks" {
     for arn in local.user_arn_list : arn => {
       principal_arn = arn
       policy_associations = {
-        adminaccess = {
+        admin = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
           access_scope = {
             type = "cluster"
