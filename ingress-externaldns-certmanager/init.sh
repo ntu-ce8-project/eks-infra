@@ -19,7 +19,7 @@ helm upgrade --install external-dns external-dns/external-dns \
   --create-namespace \
   --values helm-values/external-dns-values.yaml
 
-# 4. Install cert-manager
+# 4. Install or upgrade cert-manager
 helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
