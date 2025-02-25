@@ -17,3 +17,5 @@ helm install \
   --set crds.enabled=true
 
 kubectl get pods -n cert-manager
+
+kubectl apply -f cluster-issuer.yaml

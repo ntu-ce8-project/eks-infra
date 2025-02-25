@@ -4,9 +4,14 @@ metadata:
   name: jaz-echo-app-ingress
   namespace: jaz-eks-activity
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     external-dns.alpha.kubernetes.io/hostname: "jaz-echoapp.sctp-sandbox.com" # Replace with your domain
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - jaz-echoapp.sctp-sandbox.com
+      secretName: jaz-sctp-tls
   rules:
   - host: "jaz-echoapp.sctp-sandbox.com" # Replace with your domain
     http:
