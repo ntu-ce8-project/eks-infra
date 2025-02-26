@@ -9,9 +9,9 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-    - hosts:
+   - hosts:
         - jaz-echoapp.sctp-sandbox.com
-      secretName: jaz-sctp-tls
+     secretName: jaz-sctp-tls
   rules:
   - host: "jaz-echoapp.sctp-sandbox.com" # Replace with your domain
     http:
