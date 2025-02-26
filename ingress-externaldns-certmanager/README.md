@@ -77,7 +77,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: jazeel.meerasah@gmail.com  # Replace with your email
+    email:   # Replace with your email
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
@@ -94,12 +94,13 @@ Ensure that your service is working prior to proceeding with the next step
 
 ```bash 
 kubectl port-forward service/${SERVICE_NAME} 9090:80
+curl localhost:9090
 ```
 
 ## Creating a Ingress Resource with ExternalDNS & Nginx Controller
 
 ```yaml
-  apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: #Ingress Resource name
@@ -128,4 +129,15 @@ curl to ensure that your domain is able to route traffic to your service
 
 ## Enable LetsEncrypt TLS cert on your Ingress
 
+Add the following blocks to your Ingress resource and redeploy.
 
+```yaml
+annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "something.example.com" # Replace with your domain
+      secretName: your-tls-secret
+```
