@@ -9,5 +9,5 @@ spec:
     app: httpd-app
   ports:
     - protocol: TCP
-      port: 80
+      port: 8011
       targetPort: 5678

@@ -11,4 +11,3 @@ spec:
     - protocol: TCP
       port: 30001
       targetPort: 5678
-      nodePort: 30001
