@@ -1,0 +1,18 @@
+Use this guide to setup kube proxy free eks nodes
+
+Comment out the node groups first as cilium has to be installed for the node groups to turn healthy
+
+comment out node group > tf apply > axe it halfways since coredns pods dont turn healthy > install cilium > tf apply
+
+helm install cilium cilium/cilium --version 1.16.7 \
+  --namespace kube-system \
+  --set eni.enabled=true \
+  --set ipam.mode=eni \
+  --set egressMasqueradeInterfaces=eth0 \
+  --set routingMode=native \
+  --set k8sServiceHost=7505637818EB91FC48302ED9CB5BA64D.gr7.ap-southeast-1.eks.amazonaws.com \
+  --set k8sServicePort=443 \
+  --set kubeProxyReplacement=true
+
+
+

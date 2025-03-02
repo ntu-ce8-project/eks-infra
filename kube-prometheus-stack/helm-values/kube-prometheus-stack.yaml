@@ -1,0 +1,28 @@
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - admin-prom.sctp-sandbox.com
+    paths:
+      - /
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    external-dns.alpha.kubernetes.io/hostname: "admin-prom.sctp-sandbox.com"
+  tls:
+    - secretName: prometheus-general-tls
+      hosts:
+        - admin-prom.sctp-sandbox.com
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - admin-grafana.sctp-sandbox.com
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    external-dns.alpha.kubernetes.io/hostname: "admin-grafana.sctp-sandbox.com"
+  tls:
+    - secretName: grafana-general-tls
+      hosts:
+        - admin-grafana.sctp-sandbox.com

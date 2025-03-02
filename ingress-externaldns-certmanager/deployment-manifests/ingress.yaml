@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: jaz-echo-app-ingress
-  namespace: jaz-eks-activity
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     external-dns.alpha.kubernetes.io/hostname: "jaz-echoapp.sctp-sandbox.com" # Replace with your domain

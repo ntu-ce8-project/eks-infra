@@ -7,14 +7,16 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
+  bootstrap_self_managed_addons = false
+
   cluster_name    = "shared-eks-cluster"
   cluster_version = "1.31"
 
   cluster_addons = {
     coredns                = {}
     eks-pod-identity-agent = {}
-    kube-proxy             = {}
-    vpc-cni                = {}
+    # kube-proxy             = {}
+    # vpc-cni                = {}
   }
 
   cluster_endpoint_public_access           = true
