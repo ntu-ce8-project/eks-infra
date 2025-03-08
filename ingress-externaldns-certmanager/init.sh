@@ -12,6 +12,7 @@ helm repo update
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
   --create-namespace \
+  --set controller.metrics.serviceMonitor.enabled=true \
   --set controller.metrics.enabled=true
 
 # 3. Install or upgrade external-dns
@@ -27,4 +28,3 @@ helm upgrade --install cert-manager jetstack/cert-manager \
   --version v1.17.0 \
   --set crds.enabled=true
 
-echo "All Helm releases installed or upgraded successfully!"

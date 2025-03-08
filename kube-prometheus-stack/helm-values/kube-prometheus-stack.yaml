@@ -12,7 +12,7 @@ prometheus:
   tls:
     - secretName: prometheus-general-tls
       hosts:
-        - admin-prom.sctp-sandbox.com
+        - admin-grafana.sctp-sandbox.com
 grafana:
   ingress:
     enabled: true
@@ -26,3 +26,9 @@ grafana:
     - secretName: grafana-general-tls
       hosts:
         - admin-grafana.sctp-sandbox.com
+prometheus-node-exporter:
+  extraArgs:
+    - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+    - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
+    - --collector.systemd
+    - --collector.ethtool
