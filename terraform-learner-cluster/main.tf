@@ -18,6 +18,9 @@ module "eks" {
     eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni                = {}
+    aws-ebs-csi-driver = {
+      service_account_role_arn = try(module.ebs_csi_driver_role[0].iam_role_arn, null)
+    }
   }
 
   cluster_endpoint_public_access           = true
