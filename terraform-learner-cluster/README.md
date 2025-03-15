@@ -22,6 +22,8 @@ variable "enable_loki_s3" {
 }
 ```
 
+All of the related IRSA resources are stored in ```irsa.tf``
+
 ## For Cilium Setup Only
 
 If you're looking to create a kube proxy free eks cluster, you may do the following:
