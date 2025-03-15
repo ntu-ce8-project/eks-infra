@@ -27,16 +27,16 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  # eks_managed_node_groups = {
-  #   learner_ng = {
-  #     ami_type       = "AL2023_x86_64_STANDARD"
-  #     instance_types = ["m5.large"]
+  eks_managed_node_groups = {
+    learner_ng = {
+      ami_type       = "AL2023_x86_64_STANDARD"
+      instance_types = ["m5.large"]
 
-  #     min_size     = 3
-  #     max_size     = 5
-  #     desired_size = 3
-  #   }
-  # }
+      min_size     = 3
+      max_size     = 5
+      desired_size = 3
+    }
+  }
 
   access_entries = {
     for arn in local.user_arn_list : arn => {

@@ -1,3 +1,17 @@
+resource "aws_s3_bucket" "loki_chunks" {
+  count = var.enable_loki_s3 ? 1 : 0
+
+  bucket_prefix = "loki-chunks-sctp"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket" "loki_ruler" {
+  count = var.enable_loki_s3 ? 1 : 0
+
+  bucket_prefix = "loki-ruler-sctp"
+  force_destroy = true
+}
+
 module "loki_s3_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version = "~> 5.52.1"
@@ -25,13 +39,15 @@ module "loki_s3_role" {
         "s3:GetObject",
         "s3:DeleteObject"
       ]
-      effect    = "Allow"
+      effect = "Allow"
       resources = [
-        "arn:aws:s3:::loki-chunks-sctp",
-        "arn:aws:s3:::loki-chunks-sctp/*",
-        "arn:aws:s3:::loki-ruler-sctp",
-        "arn:aws:s3:::loki-ruler-sctp/*"
+        "${aws_s3_bucket.loki_chunks[0].arn}",
+        "${aws_s3_bucket.loki_chunks[0].arn}/*",
+        "${aws_s3_bucket.loki_ruler[0].arn}",
+        "${aws_s3_bucket.loki_ruler[0].arn}/*"
       ]
     }
   ]
+
+  depends_on = [aws_s3_bucket.loki_chunks, aws_s3_bucket.loki_ruler]
 }
