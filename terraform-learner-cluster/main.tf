@@ -1,4 +1,5 @@
 locals {
+  # Add more user groups if required to grant admin access since this is sandbox account
   merged_users  = concat(data.aws_iam_group.ce8.users, data.aws_iam_group.instructor.users)
   user_arn_list = [for obj in local.merged_users : obj["arn"]]
 }
@@ -20,9 +21,9 @@ module "eks" {
   }
 
   cluster_endpoint_public_access           = true
-  enable_cluster_creator_admin_permissions = false
+  enable_cluster_creator_admin_permissions = false #Setting this as false since the instructor creating this cluster is also part of the access entries below
 
-  enable_irsa = true
+  enable_irsa = true # To create a OIDC provider/issuer for this cluster to be able to create IRSAs
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
@@ -45,7 +46,7 @@ module "eks" {
         admin = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
           access_scope = {
-            type = "cluster"
+            type = "cluster" #Access to whole cluster and not just a specific namespace
           }
         }
       }

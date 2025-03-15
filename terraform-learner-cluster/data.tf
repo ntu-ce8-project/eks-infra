@@ -1,3 +1,4 @@
+# Add more user groups if required to grant admin access since this is sandbox account
 data "aws_iam_group" "ce8" {
   group_name = "sctp-ce-8-learner"
 }
