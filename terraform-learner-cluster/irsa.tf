@@ -62,6 +62,10 @@ module "ebs_csi_driver_role" {
       variable = "${module.eks.oidc_provider}:sub"
     }
   ]
+
+  role_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
+  ]
 }
 
 ###############################
