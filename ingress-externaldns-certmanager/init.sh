@@ -12,7 +12,6 @@ helm repo update
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
   --create-namespace \
-  --set controller.metrics.serviceMonitor.enabled=true \
   --set controller.metrics.enabled=true
 
 # 3. Install or upgrade external-dns
