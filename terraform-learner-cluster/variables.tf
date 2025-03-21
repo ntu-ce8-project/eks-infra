@@ -1,3 +1,8 @@
+variable "region" {
+  description = "The AWS region to deploy the EKS cluster"
+  type        = string
+  default     = "ap-southeast-1"
+}
 # Set to true if you're making use of ExternalDNS with Route53
 variable "enable_external_dns" {
   type    = bool

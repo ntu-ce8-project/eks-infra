@@ -1,34 +1,12 @@
 name: Terraform EKS Deployment
 
-on: 
+on:
   workflow_dispatch:
     inputs:
-      enable_external_dns:
-        description: "Enable ExternalDNS"
-        type: choice
-        options:
-          - "true"
-          - "false"
-        default: "true"
-        required: false
-
-      enable_loki_s3:
-        description: "Enable Loki S3"
-        type: choice
-        options:
-          - "true"
-          - "false"
-        default: "true"
-        required: false
-
-      enable_ebs_csi_driver_role:
-        description: "Enable EBS CSI Driver Role"
-        type: choice
-        options:
-          - "true"
-          - "false"
-        default: "true"
-        required: false
+      region:
+        description: "AWS region"
+        required: true
+        default: "ap-southeast-1"
 
 permissions:
   id-token: write       # Required for OIDC
@@ -47,7 +25,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
-          aws-region: ap-southeast-1
+          aws-region: ${{ inputs.region }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -59,15 +37,11 @@ jobs:
       - name: Terraform Plan
         working-directory: ./terraform-learner-cluster
         env:
-          TF_VAR_enable_external_dns: ${{ inputs.enable_external_dns }}
-          TF_VAR_enable_loki_s3: ${{ inputs.enable_loki_s3 }}
-          TF_VAR_enable_ebs_csi_driver_role: ${{ inputs.enable_ebs_csi_driver_role }}
+          TF_VAR_region: ${{ inputs.region }}
         run: terraform plan
         
       - name: Terraform Apply
         working-directory: ./terraform-learner-cluster
         env:
-          TF_VAR_enable_external_dns: ${{ inputs.enable_external_dns }}
-          TF_VAR_enable_loki_s3: ${{ inputs.enable_loki_s3 }}
-          TF_VAR_enable_ebs_csi_driver_role: ${{ inputs.enable_ebs_csi_driver_role }}
+          TF_VAR_region: ${{ inputs.region }}
         run: terraform apply -auto-approve
