@@ -1,0 +1,22 @@
+name: Terraform EKS Deployment
+
+on: workflow_dispatch
+
+permissions:
+  id-token: write       # Required for OIDC
+  contents: read        # To read repo content
+
+jobs:
+  deploy:
+    name: Terraform Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
+          aws-region: ap-southeast-1
