@@ -24,7 +24,7 @@ module "eks" {
   }
 
   cluster_endpoint_public_access           = true
-  enable_cluster_creator_admin_permissions = false #Setting this as false since the instructor creating this cluster is also part of the access entries below
+  enable_cluster_creator_admin_permissions = true #Set to false if you're creating this locally, set to true if you're using a IAM Role (E.g. Github OIDC)
 
   enable_irsa = true # To create a OIDC provider/issuer for this cluster to be able to create IRSAs
 
