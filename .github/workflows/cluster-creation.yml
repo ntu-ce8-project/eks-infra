@@ -105,7 +105,7 @@ jobs:
           aws-region: ${{ inputs.region }}
 
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}"
+        run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}
 
       - name: Deploy Nginx Ingress Controller
         if: ${{ github.event.inputs.nginx-ingress == 'true' }}
