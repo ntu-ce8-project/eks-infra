@@ -9,9 +9,7 @@ helm repo update
 # 2. Install or upgrade prometheus
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 69.6.0 \
   --create-namespace \
-  --set controller.metrics.enabled=true \
+  --namespace monitoring \
   --values helm-values/kube-prometheus-stack.yaml
-helm install promtail grafana/promtail --version 6.7.4
-helm install loki grafana/loki --version 2.15.2 --values loki.yaml
 
 
