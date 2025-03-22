@@ -39,6 +39,22 @@ on:
           - "false"
         default: "false"
         required: true
+      monitoring:
+        type: choice
+        description: "Deploy Prometheus and Grafana? (true/false)"
+        options:
+          - "true"
+          - "false"
+        default: "false"
+        required: true
+      logging:
+        type: choice
+        description: "Deploy Loki? (true/false)"
+        options:
+          - "true"
+          - "false"
+        default: "false"
+        required: true
 
 permissions:
   id-token: write       # Required for OIDC
@@ -143,3 +159,18 @@ jobs:
           cd addons/argocd
           chmod +x init.sh
           ./init.sh
+
+      - name: Deploy Prometheus and Grafana
+        if: ${{ github.event.inputs.monitoring == 'true' }}
+        run: |
+          cd addons/kube-prometheus-stack
+          chmod +x init.sh
+          ./init.sh
+
+      - name: Deploy Loki
+        if: ${{ github.event.inputs.logging == 'true' }}
+        run: |
+          cd addons/loki
+          chmod +x init.sh
+          ./init.sh
+
