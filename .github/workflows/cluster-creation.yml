@@ -88,7 +88,7 @@ jobs:
         id: tfout
         run: |
           echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
-          echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -raw external_dns_role_arn)" >> $GITHUB_OUTPUT
+          echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -json external_dns_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
 
   bootstrap:
     runs-on: ubuntu-latest
