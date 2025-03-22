@@ -2,8 +2,8 @@ provider:
   name: aws
 serviceAccount:
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/externaldns-oidc-role  # The external-dns role ARN
+    eks.amazonaws.com/role-arn: ${EXTERNAL_DNS_ROLE_ARN} #arn:aws:iam::255945442255:role/externaldns-oidc-role  # The external-dns role ARN
 env:
   - name: AWS_DEFAULT_REGION
-    value: ap-southeast-1 # change to region where EKS is installed
+    value: ${REGION} # change to region where EKS is installed
 policy: sync # Default is upsert-only

@@ -1,0 +1,143 @@
+name: Cluster Creation & Helm Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      region:
+        description: "AWS region"
+        required: true
+        default: "ap-southeast-1"
+      nginx-ingress:
+        type: choice
+        description: "Deploy Nginx Ingress Controller? (true/false)"
+        options:
+          - "true"
+          - "false"
+        default: "false"
+        required: true
+      external-dns:
+        type: choice
+        description: "Deploy ExternalDNS? (true/false)"
+        options:
+          - "true"
+          - "false"
+        default: "false"
+        required: true
+      cert-manager:
+        type: choice
+        description: "Deploy CertManager? (true/false)"
+        options:
+          - "true"
+          - "false"
+        default: "false"
+        required: true
+      argocd:
+        type: choice
+        description: "Deploy ArgoCD? (true/false)"
+        options:
+          - "true"
+          - "false"
+        default: "false"
+        required: true
+
+permissions:
+  id-token: write       # Required for OIDC
+  contents: read        # To read repo content
+
+jobs:
+  deploy:
+    name: Terraform Deploy
+    runs-on: ubuntu-latest
+    outputs:
+      cluster_name: ${{ steps.tfout.outputs.CLUSTER_NAME }}
+      external_dns_role_arn: ${{ steps.tfout.outputs.EXTERNAL_DNS_ROLE_ARN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
+          aws-region: ${{ inputs.region }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform/eks-cluster
+
+      - name: Terraform Plan
+        working-directory: ./terraform/eks-cluster
+        env:
+          TF_VAR_region: ${{ inputs.region }}
+        run: terraform plan
+        
+      - name: Terraform Apply
+        working-directory: ./terraform/eks-cluster
+        env:
+          TF_VAR_region: ${{ inputs.region }}
+        run: terraform apply -auto-approve
+
+      - name: Export terraform outputs
+        working-directory: ./terraform/eks-cluster
+        id: tfout
+        run: |
+          echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
+          echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -raw external_dns_role_arn)" >> $GITHUB_OUTPUT
+
+  bootstrap:
+    runs-on: ubuntu-latest
+    needs: [deploy]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
+          aws-region: ${{ inputs.region }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}"
+
+      - name: Deploy Nginx Ingress Controller
+        if: ${{ github.event.inputs.nginx-ingress == 'true' }}
+        run: |
+          cd addons/nginx-ingress
+          chmod +x init.sh
+          ./init.sh
+
+      - name: Deploy ExternalDNS for Route53
+        if: ${{ github.event.inputs.external-dns == 'true' }}
+        env:
+          REGION: ${{ github.event.inputs.aws-region }}
+          EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
+        run: |
+          cd addons/r53-external-dns
+          chmod +x init.sh
+          ./init.sh
+
+          envsubst < cluster-issuer.yaml | kubectl apply -f -
+
+      - name: Deploy Cert Manager
+        if: ${{ github.event.inputs.cert-manager == 'true' }}
+        env:
+          EMAIL: ${{ secrets.EMAIL_ADDRESS }}
+        run: |
+          cd addons/cert-manager
+          chmod +x init.sh
+          ./init.sh
+          
+          envsubst < cluster-issuer.yaml | kubectl apply -f -
+
+      - name: Deploy ArgoCD
+        if: ${{ github.event.inputs.argocd == 'true' }}
+        run: |
+          cd addons/argocd
+          chmod +x init.sh
+          ./init.sh
