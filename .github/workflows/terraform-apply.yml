@@ -32,16 +32,16 @@ jobs:
         
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform-learner-cluster
+        working-directory: ./terraform/eks-cluster
 
       - name: Terraform Plan
-        working-directory: ./terraform-learner-cluster
+        working-directory: ./terraform/eks-cluster
         env:
           TF_VAR_region: ${{ inputs.region }}
         run: terraform plan
         
       - name: Terraform Apply
-        working-directory: ./terraform-learner-cluster
+        working-directory: ./terraform/eks-cluster
         env:
           TF_VAR_region: ${{ inputs.region }}
         run: terraform apply -auto-approve
