@@ -1,3 +1,0 @@
-loki:
-  extraArgs:
-    server.path-prefix: /sonar/loki/

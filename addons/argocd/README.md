@@ -2,11 +2,9 @@
 
 Note that you have to deploy the following components prior to deploying this ArgoCD helm chart:
 
-- ExternalDNS with IRSA
 - Nginx Ingress Controller
+- ExternalDNS with IRSA
 - Cert-Manager + ClusterIssuer
-
-You may refer to ```ingress-externaldns-certmanager``` to deploy the following beforehand.
 
 ## Deploying your ArgoCD Helm Chart
 

@@ -20,6 +20,12 @@ variable "enable_loki_s3" {
   type    = bool
   default = true
 }
+
+# Set to true if you're making use of a PersistentVolume with EBS CSI Driver Add-ons
+variable "enable_ebs_csi_driver_role" {
+  type    = bool
+  default = true
+}
 ```
 
 All of the related IRSA resources are stored in ```irsa.tf``

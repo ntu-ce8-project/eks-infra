@@ -15,8 +15,6 @@ Note that you have the following tools installed prior to using this repo:
 
 | File / Folder Name | Usage / Purpose |
 | --- | --- |
-| terraform-learner-cluster/ | This folder contains the required terraform files to create your AWS EKS cluster. Refer to the comments within the TF files |
-| demo-examples/ | Contains the required manifest files for the introductory k8s lessons on the how to create a basic deployment & the different types of services |
-| ingress-externaldns-certmanager/ | Contains the manifest files to create a Nginx Ingress Controller, with ExternalDNS to Route53 & LetsEncrypt cert with cert-manager. (Note that you'll need to create your ExternalDNS IRSA as part of your terraform stack) -> You may refer to the ```README.md``` file within this folder on how you may deploy this |
-| kube-prometheus-stack/ | Contains the manifest files for deploying a kube-prometheus stack along with the helm-values for the students |
-| logging-stack/ | Contains the manifest files for deploying a loki grafana stack along with the helm-values for the students (Note that you'll need to create your Loki IRSA & S3 buckets as part of your terraform stack) |
+| terraform/ | This folder contains the required terraform files to create your AWS EKS cluster. Refer to the comments within the TF files |
+| deployment-manifest-examples/ | Contains the required manifest files for the introductory k8s lessons on the how to create a basic deployment & the different types of services, along with netshoot pod for troubleshooting & kyverno policy for instructor to protect specific resources. |
+| addons/ | Contains the required helm charts to bootstrap your cluster. manifest files to bootstrap your cluster. You may refer to the ```README.md``` file within the folder how to install charts with dependencies. |
