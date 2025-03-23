@@ -61,7 +61,7 @@ permissions:
   contents: read        # To read repo content
 
 env:
-  OIDC_ROLE: arn:aws:iam::255945442255:role/shared-eks-cluster-deployer-role
+  OIDC_ROLE: arn:aws:iam::255945442255:role/github_oidc_role_ce8_capstone_G1
 
 jobs:
   deploy:
@@ -154,7 +154,7 @@ jobs:
       - name: Deploy ExternalDNS for Route53
         if: ${{ github.event.inputs.external-dns == 'true' }}
         env:
-          REGION: ${{ github.event.inputs.aws-region }}
+          REGION: ${{ github.event.inputs.region }}
           EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
         run: |
           cd addons/r53-external-dns
