@@ -13,7 +13,7 @@ permissions:
   contents: read        # To read repo content
 
 env:            
-  OIDC_ROLE: arn:aws:iam::255945442255:role/shared-eks-cluster-deployer-role
+  OIDC_ROLE: arn:aws:iam::255945442255:role/github_oidc_role_ce8_capstone_G1
           
 jobs:
   cleanup:
