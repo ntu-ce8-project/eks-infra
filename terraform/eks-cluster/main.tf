@@ -24,10 +24,7 @@ module "eks" {
   }
 
   cluster_endpoint_public_access           = true
-
-  # If using Github OIDC Role, set this to true (For bootstrapping & cleanup). 
-  # If running locally using your IAM user creds, presumably you're already part of the access entries below. So setting this to false
-  enable_cluster_creator_admin_permissions = strcontains(data.aws_caller_identity.current.arn,":role/") ? true : false
+  enable_cluster_creator_admin_permissions = false
 
   enable_irsa = true # To create a OIDC provider/issuer for this cluster to be able to create IRSAs
 
@@ -52,7 +49,7 @@ module "eks" {
         admin = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
           access_scope = {
-            type = "cluster" #Access to whole cluster and not just a specific namespace
+            type = "cluster"
           }
         }
       }

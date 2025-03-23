@@ -60,6 +60,9 @@ permissions:
   id-token: write       # Required for OIDC
   contents: read        # To read repo content
 
+env:
+  OIDC_ROLE: arn:aws:iam::255945442255:role/shared-eks-cluster-deployer-role
+
 jobs:
   deploy:
     name: Terraform Deploy
@@ -75,7 +78,7 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
+          role-to-assume: ${{ env.OIDC_ROLE }}
           aws-region: ${{ inputs.region }}
 
       - name: Setup Terraform
@@ -117,8 +120,21 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
+          role-to-assume: ${{ env.OIDC_ROLE }}
           aws-region: ${{ inputs.region }}
+      
+      - name: Check and create EKS access entry for OIDC role
+        run: |
+          access_entries=$(aws eks list-access-entries --cluster-name ${{ needs.deploy.outputs.cluster_name }} --query 'accessEntries[].roleArn' --output text)
+          echo "Access entries: $access_entries"
+    
+          if echo "$access_entries" | grep -q ${{ env.OIDC_ROLE }}; then
+            echo "Role is already present in EKS access entries."
+          else
+            echo "Role not found. Creating access entry and attaching cluster admin policy..."
+
+            aws eks create-access-entry --cluster-name ${{ needs.deploy.outputs.cluster_name }} --role-arn ${{ env.OIDC_ROLE }} --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy
+          fi
 
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}
@@ -137,10 +153,9 @@ jobs:
           EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
         run: |
           cd addons/r53-external-dns
+          envsubst < values.yaml
           chmod +x init.sh
           ./init.sh
-
-          envsubst < cluster-issuer.yaml | kubectl apply -f -
 
       - name: Deploy Cert Manager
         if: ${{ github.event.inputs.cert-manager == 'true' }}

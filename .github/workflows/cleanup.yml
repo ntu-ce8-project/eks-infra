@@ -12,6 +12,9 @@ permissions:
   id-token: write       # Required for OIDC
   contents: read        # To read repo content
 
+env:            
+  OIDC_ROLE: arn:aws:iam::255945442255:role/shared-eks-cluster-deployer-role
+          
 jobs:
   cleanup:
     runs-on: ubuntu-latest
@@ -23,7 +26,7 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::255945442255:role/github-actions-eks-demo-role
+          role-to-assume: ${{ env.OIDC_ROLE }}
           aws-region: ${{ inputs.region }}
 
       - name: Setup Terraform
