@@ -10,7 +10,7 @@ module "eks" {
 
   bootstrap_self_managed_addons = true
 
-  cluster_name    = "shared-eks-cluster"
+  cluster_name    = "CE8-G1-capstone-eks-cluster"
   cluster_version = "1.31"
 
   cluster_addons = {
@@ -35,7 +35,8 @@ module "eks" {
     learner_ng = {
       ami_type       = "AL2023_x86_64_STANDARD"
       # instance_types = ["m5.large"]
-      instance_types = ["t2.micro"]
+      # instance_types = ["t2.micro"] # too underpowered
+      instance_types = ["t3.medium"]
 
       min_size     = 3
       max_size     = 5
