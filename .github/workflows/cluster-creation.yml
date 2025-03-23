@@ -125,14 +125,18 @@ jobs:
       
       - name: Check and create EKS access entry for OIDC role
         run: |
-          access_entries=$(aws eks list-access-entries --cluster-name ${{ needs.deploy.outputs.cluster_name }} --query 'accessEntries[].roleArn' --output text)
-          echo "Access entries: $access_entries"
-    
-          if echo "$access_entries" | grep -q ${{ env.OIDC_ROLE }}; then
-            echo "Role is already present in EKS access entries."
+          access_entry=$(aws eks list-access-entries --cluster-name ${{ needs.deploy.outputs.cluster_name }} --query "accessEntries[?roleArn==${{ env.OIDC_ROLE }}]" --output json)
+          if [ "$access_entry" != "[]" ]; then
+                policy=$(echo "$access_entry" | jq -r '.[0].accessPolicy')
+  
+            if [[ "$policy" == *"AmazonEKSClusterAdminPolicy"* ]]; then
+              echo "Role is already present with the correct access policy."
+            else
+              echo "Role found, but without the required access policy. Attaching policy..."
+              aws eks associate-access-policy --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }} --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy --access-scope=cluster
+            fi
           else
             echo "Role not found. Creating access entry and attaching cluster admin policy..."
-
             aws eks create-access-entry --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }}
             aws eks associate-access-policy --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }} --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy --access-scope=cluster
           fi
