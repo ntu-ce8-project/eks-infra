@@ -125,7 +125,7 @@ jobs:
       
       - name: Check and create EKS access entry for OIDC role
         run: |
-          access_entry=$(aws eks list-access-entries --cluster-name ${{ needs.deploy.outputs.cluster_name }} --query "accessEntries[?roleArn=='${OIDC_ROLE}']" --output json)
+          access_entry=$(aws eks list-access-entries --cluster-name ${{ needs.deploy.outputs.cluster_name }} --query "accessEntries[?principal=='${OIDC_ROLE}']" --output json)
           if [ "$access_entry" != "[]" ]; then
                 policy=$(echo "$access_entry" | jq -r '.[0].accessPolicy')
   
