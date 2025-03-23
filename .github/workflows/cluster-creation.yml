@@ -133,7 +133,7 @@ jobs:
           else
             echo "Role not found. Creating access entry and attaching cluster admin policy..."
 
-            aws eks create-access-entry --cluster-name ${{ needs.deploy.outputs.cluster_name }} --role-arn ${{ env.OIDC_ROLE }} --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy
+            aws eks create-access-entry --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }} --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy
           fi
 
       - name: Update kubeconfig
