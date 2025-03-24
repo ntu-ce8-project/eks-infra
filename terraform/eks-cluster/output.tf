@@ -33,3 +33,8 @@ output "loki_ruler_bucket_arn" {
 output "ebs_csi_driver_role_arn" {
   value = module.ebs_csi_driver_role[*].iam_role_arn
 }
+
+output "merged_users" {
+  description = "List of all users and groups that have been merged to create a single list of users"
+  value = local.merged_users
+}
