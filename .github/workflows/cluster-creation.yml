@@ -9,7 +9,7 @@ on:
         default: "ap-southeast-1"
       nginx-ingress:
         type: choice
-        description: "Deploy Nginx Ingress Controller? (true/false)"
+        description: "Deploy Nginx Ingress Controller?"
         options:
           - "true"
           - "false"
@@ -17,7 +17,7 @@ on:
         required: true
       external-dns:
         type: choice
-        description: "Deploy ExternalDNS? (true/false)"
+        description: "Deploy ExternalDNS?"
         options:
           - "true"
           - "false"
@@ -25,7 +25,7 @@ on:
         required: true
       cert-manager:
         type: choice
-        description: "Deploy CertManager? (true/false)"
+        description: "Deploy CertManager?"
         options:
           - "true"
           - "false"
@@ -33,7 +33,7 @@ on:
         required: true
       argocd:
         type: choice
-        description: "Deploy ArgoCD? (true/false)"
+        description: "Deploy ArgoCD?"
         options:
           - "true"
           - "false"
@@ -41,7 +41,7 @@ on:
         required: true
       monitoring:
         type: choice
-        description: "Deploy Prometheus and Grafana? (true/false)"
+        description: "Deploy Prometheus and Grafana?"
         options:
           - "true"
           - "false"
@@ -49,14 +49,14 @@ on:
         required: true
       logging:
         type: choice
-        description: "Deploy Loki? (true/false)"
+        description: "Deploy Loki?"
         options:
           - "true"
           - "false"
         default: "false"
         required: true
 
-permissions:
+permissions:  
   id-token: write       # Required for OIDC
   contents: read        # To read repo content
 
@@ -123,24 +123,6 @@ jobs:
           role-to-assume: ${{ env.OIDC_ROLE }}
           aws-region: ${{ inputs.region }}
       
-      - name: Check and create EKS access entry for OIDC role
-        run: |
-          access_entry=$(aws eks list-access-entries --cluster-name ${{ needs.deploy.outputs.cluster_name }} --query "accessEntries[?principal=='${OIDC_ROLE}']" --output json)
-          if [ "$access_entry" != "[]" ]; then
-                policy=$(echo "$access_entry" | jq -r '.[0].accessPolicy')
-  
-            if [[ "$policy" == *"AmazonEKSClusterAdminPolicy"* ]]; then
-              echo "Role is already present with the correct access policy."
-            else
-              echo "Role found, but without the required access policy. Attaching policy..."
-              aws eks associate-access-policy --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }} --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy --access-scope type=cluster
-            fi
-          else
-            echo "Role not found. Creating access entry and attaching cluster admin policy..."
-            aws eks create-access-entry --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }}
-            aws eks associate-access-policy --cluster-name ${{ needs.deploy.outputs.cluster_name }} --principal-arn ${{ env.OIDC_ROLE }} --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterAdminPolicy --access-scope type=cluster
-          fi
-
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}
 
@@ -157,7 +139,7 @@ jobs:
           REGION: ${{ github.event.inputs.region }}
           EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
         run: |
-          cd addons/r53-external-dns
+          cd addons/r53-externaldns
           envsubst < values.yaml
           chmod +x init.sh
           ./init.sh
