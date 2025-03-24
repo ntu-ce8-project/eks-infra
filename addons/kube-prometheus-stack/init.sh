@@ -10,6 +10,6 @@ helm repo update
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 69.6.0 \
   --create-namespace \
   --namespace monitoring \
-  --values helm-values/kube-prometheus-stack.yaml
+  --values values.yaml
 
 

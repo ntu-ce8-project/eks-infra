@@ -1,6 +1,22 @@
 locals {
-  # Add more user groups if required to grant admin access since this is sandbox account
-  merged_users  = concat(data.aws_iam_group.ce8.users, data.aws_iam_group.instructor.users)
+  prefix = "CE8-G1-capstone"
+  allowed_usernames = [
+    "jasonleong84",
+    "Royston88",
+    "jsstrn",
+    "vseow7474",
+    "mal1610-cohort8"
+  ]
+
+  # Only use instructor group
+  merged_users_raw = data.aws_iam_group.instructor.users
+
+  # Filter by allowed usernames
+  merged_users = [
+    for u in local.merged_users_raw : u
+    if contains(local.allowed_usernames, u.user_name)
+  ]
+
   user_arn_list = [for obj in local.merged_users : obj["arn"]]
 }
 
@@ -10,7 +26,7 @@ module "eks" {
 
   bootstrap_self_managed_addons = true
 
-  cluster_name    = "CE8-G1-capstone-eks-cluster"
+  cluster_name    = "${local.prefix}-cluster"
   cluster_version = "1.31"
 
   cluster_addons = {
@@ -24,7 +40,7 @@ module "eks" {
   }
 
   cluster_endpoint_public_access           = true
-  enable_cluster_creator_admin_permissions = false
+  enable_cluster_creator_admin_permissions = true
 
   enable_irsa = true # To create a OIDC provider/issuer for this cluster to be able to create IRSAs
 
@@ -32,7 +48,7 @@ module "eks" {
   subnet_ids = module.vpc.private_subnets
 
   eks_managed_node_groups = {
-    learner_ng = {
+    CE8-G1-capstone-eks-ng = {
       ami_type       = "AL2023_x86_64_STANDARD"
       # instance_types = ["m5.large"]
       # instance_types = ["t2.micro"] # too underpowered
@@ -63,7 +79,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.8.1"
 
-  name                    = "eks_shared_vpc"
+  name                    = "${local.prefix}-vpc"
   cidr                    = "172.31.0.0/16"
   azs                     = data.aws_availability_zones.available.names
   public_subnets          = ["172.31.101.0/24", "172.31.102.0/24"]
