@@ -38,3 +38,11 @@ output "merged_users" {
   description = "List of all users and groups that have been merged to create a single list of users"
   value = local.merged_users
 }
+
+output "allowed_usernames" {
+  value = local.allowed_usernames
+}
+
+output "merged_users_filtered" {
+  value = local.filtered_users
+}

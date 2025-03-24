@@ -8,14 +8,14 @@ locals {
     "mal1610-cohort8"
   ]
 
-  # Only use instructor group
-  merged_users_raw = data.aws_iam_group.instructor.users
+  # merged_users_raw = data.aws_iam_group.ce8.users
 
-  # Filter by allowed usernames
-  merged_users = [
-    for u in local.merged_users_raw : u
+  filtered_users = [
+    for u in data.aws_iam_group.ce8.users : u
     if contains(local.allowed_usernames, u.user_name)
   ]
+
+  merged_users  = concat(local.filtered_users, data.aws_iam_group.instructor.users)
 
   user_arn_list = [for obj in local.merged_users : obj["arn"]]
 }
