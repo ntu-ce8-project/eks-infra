@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-app
+  namespace: hello-world
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: httpd-app
+  template:
+    metadata:
+      labels:
+        app: httpd-app
+    spec:
+      containers:
+      - name: httpd-app
+        image: hashicorp/http-echo:0.2.3
+        args:
+        - "-text=$(WELCOME_MESSAGE)"
+        ports:
+        - containerPort: 5678
+        env:
+        - name: WELCOME_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: sample-config
+              key: welcome-message
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-config
+  namespace: hello-world
+data:
+  welcome-message: "Hello, World!"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-service
+  namespace: hello-world
+spec:
+  selector:
+    app: httpd-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5678
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world-ingress
+  namespace: hello-world
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "hello-world.sctp-sandbox.com" # Route53 Record
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "hello-world.sctp-sandbox.com" # Route53 Record
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hello-world
+            port:
+              number: 80
