@@ -140,7 +140,7 @@ jobs:
           EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
         run: |
           cd addons/r53-externaldns
-          envsubst < values.yaml
+          envsubst < values.yaml > values.tmp && mv values.tmp values.yaml
           chmod +x init.sh
           ./init.sh
 
