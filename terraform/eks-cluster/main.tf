@@ -1,5 +1,5 @@
 locals {
-  prefix = "CE8-G1-capstone"
+  prefix = "ce8-g1-capstone"
   allowed_usernames = [
     "jasonleong84",
     "Royston88",
