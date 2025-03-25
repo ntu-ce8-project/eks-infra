@@ -15,7 +15,7 @@ locals {
     if contains(local.allowed_usernames, u.user_name)
   ]
 
-  merged_users  = concat(local.filtered_users, data.aws_iam_group.instructor.users)
+  merged_users = concat(local.filtered_users, data.aws_iam_group.instructor.users)
 
   user_arn_list = [for obj in local.merged_users : obj["arn"]]
 }
@@ -49,7 +49,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     CE8-G1-capstone-eks-ng = {
-      ami_type       = "AL2023_x86_64_STANDARD"
+      ami_type = "AL2023_x86_64_STANDARD"
       # instance_types = ["m5.large"]
       # instance_types = ["t2.micro"] # too underpowered
       instance_types = ["t3.medium"]

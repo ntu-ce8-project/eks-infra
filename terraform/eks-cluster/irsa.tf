@@ -8,7 +8,7 @@ module "external_dns_role" {
   count = var.enable_external_dns ? 1 : 0
 
   create_role                    = true
-  role_name                      = "externaldns-oidc-role"
+  role_name                      = "${local.prefix}-externaldns-oidc-role"
   provider_url                   = module.eks.oidc_provider
   oidc_fully_qualified_audiences = ["sts.amazonaws.com"]
 
@@ -51,7 +51,7 @@ module "ebs_csi_driver_role" {
   count = var.enable_ebs_csi_driver_role ? 1 : 0
 
   create_role                    = true
-  role_name                      = "ebs-csidriver-role"
+  role_name                      = "${local.prefix}-ebs-csidriver-role"
   provider_url                   = module.eks.oidc_provider
   oidc_fully_qualified_audiences = ["sts.amazonaws.com"]
 
@@ -75,14 +75,14 @@ module "ebs_csi_driver_role" {
 resource "aws_s3_bucket" "loki_chunks" {
   count = var.enable_loki_s3 ? 1 : 0
 
-  bucket_prefix = "loki-chunks-sctp"
+  bucket_prefix = "${local.prefix}-loki-chunks-sctp"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "loki_ruler" {
   count = var.enable_loki_s3 ? 1 : 0
 
-  bucket_prefix = "loki-ruler-sctp"
+  bucket_prefix = "${local.prefix}-loki-ruler-sctp"
   force_destroy = true
 }
 
@@ -93,7 +93,7 @@ module "loki_s3_role" {
   count = var.enable_loki_s3 ? 1 : 0
 
   create_role                    = true
-  role_name                      = "loki-s3-oidc-role"
+  role_name                      = "${local.prefix}-loki-s3-oidc-role"
   provider_url                   = module.eks.oidc_provider
   oidc_fully_qualified_audiences = ["sts.amazonaws.com"]
 

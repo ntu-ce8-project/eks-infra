@@ -36,7 +36,7 @@ output "ebs_csi_driver_role_arn" {
 
 output "merged_users" {
   description = "List of all users and groups that have been merged to create a single list of users"
-  value = local.merged_users
+  value       = local.merged_users
 }
 
 output "allowed_usernames" {
