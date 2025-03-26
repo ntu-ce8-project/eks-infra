@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1 
+kind: Ingress
+metadata:
+  name: hello-world-ingress
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "hello-world.sctp-sandbox.com"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "hello-world.sctp-sandbox.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hello-world-service
+            port:
+              number: 80
