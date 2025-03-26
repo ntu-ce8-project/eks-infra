@@ -18,7 +18,12 @@ git pull --rebase
 
 ![architecture](docs/diagrams/architecture.drawio.svg)
 
-## Screenshots
+![architecture](docs/images/architecture.png)
 
-![alt text](docs/images/homepage.png)
-![catalog](docs/images/catalog.png)
+This diagram was generated with [KubeDiagrams](https://github.com/philippemerle/KubeDiagrams).
+
+## Online Retail Store
+
+| homepage | catalog |
+|--|--|
+| ![homepage](docs/images/homepage.png) | ![catalog](docs/images/catalog.png) |
