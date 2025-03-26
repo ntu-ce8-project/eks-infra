@@ -31,20 +31,19 @@ git stash pop
 Deploy the online retail store.
 
 ```sh
-kubectl apply -f https://github.com/aws-containers/retail-store-sample-app/releases/latest/download/kubernetes.yaml
-kubectl wait --for=condition=available deployments --all
+kubectl apply -k apps/shop
 ```
 
 Get the URL for the online retail store.
 
 ```sh
-kubectl get service ui
+kubectl get ingress ui
 ```
 
 Teardown the online retail store.
 
 ```sh
-kubectl delete -f https://github.com/aws-containers/retail-store-sample-app/releases/latest/download/kubernetes.yaml
+kubectl delete -k apps/shop
 ```
 
 ## Generating diagrams
