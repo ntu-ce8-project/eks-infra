@@ -3,29 +3,29 @@ prometheus:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - admin-prom.sctp-sandbox.com
+      - admin-prom-ce8-g1.sctp-sandbox.com
     paths:
       - /
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    external-dns.alpha.kubernetes.io/hostname: "admin-prom.sctp-sandbox.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin-prom-ce8-g1.sctp-sandbox.com"
   tls:
     - secretName: prometheus-general-tls
       hosts:
-        - admin-grafana.sctp-sandbox.com
+        - admin-grafana-ce8-g1.sctp-sandbox.com
 grafana:
   ingress:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - admin-grafana.sctp-sandbox.com
+      - admin-grafana-ce8-g1.sctp-sandbox.com
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    external-dns.alpha.kubernetes.io/hostname: "admin-grafana.sctp-sandbox.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin-grafana-ce8-g1.sctp-sandbox.com"
   tls:
     - secretName: grafana-general-tls
       hosts:
-        - admin-grafana.sctp-sandbox.com
+        - admin-grafana-ce8-g1.sctp-sandbox.com
 prometheus-node-exporter:
   extraArgs:
     - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)

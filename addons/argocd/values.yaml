@@ -1,5 +1,5 @@
 global:
-  domain: argocd-ce8.sctp-sandbox.com
+  domain: argocd-ce8-g1.sctp-sandbox.com
 
 server:
   ingress:
@@ -7,7 +7,7 @@ server:
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
-      external-dns.alpha.kubernetes.io/hostname: "argocd-ce8.sctp-sandbox.com"
+      external-dns.alpha.kubernetes.io/hostname: "argocd-ce8-g1.sctp-sandbox.com"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     tls: true

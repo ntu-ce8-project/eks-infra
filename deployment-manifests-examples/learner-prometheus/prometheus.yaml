@@ -10,12 +10,12 @@ alertmanager:
     enabled: true
     className: nginx
     hosts:
-      - host: test-alertmanager.sctp-sandbox.com
+      - host: test-alertmanager-ce8-g1.sctp-sandbox.com
         paths:
           - path: /
             pathType: ImplementationSpecific
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "test-alertmanager.sctp-sandbox.com"
+      external-dns.alpha.kubernetes.io/hostname: "test-alertmanager-ce8-g1.sctp-sandbox.com"
 
 serverFiles:
   prometheus.yml:
@@ -39,7 +39,7 @@ server:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - test-prom.sctp-sandbox.com
+      - test-prom-ce8-g1.sctp-sandbox.com
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "test-prom.sctp-sandbox.com"
+    external-dns.alpha.kubernetes.io/hostname: "test-prom-ce8-g1.sctp-sandbox.com"
 
