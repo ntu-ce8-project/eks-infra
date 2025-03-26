@@ -14,6 +14,27 @@ Pull all changes from the remote repository. Do this before you push your code c
 git pull --rebase
 ```
 
+## Deployment
+
+Deploy the online retail store.
+
+```sh
+kubectl apply -f https://github.com/aws-containers/retail-store-sample-app/releases/latest/download/kubernetes.yaml
+kubectl wait --for=condition=available deployments --all
+```
+
+Get the URL for the online retail store.
+
+```sh
+kubectl get service ui
+```
+
+Teardown the online retail store.
+
+```sh
+kubectl delete -f https://github.com/aws-containers/retail-store-sample-app/releases/latest/download/kubernetes.yaml
+```
+
 ## Architecture
 
 ![architecture](docs/diagrams/architecture.drawio.svg)
