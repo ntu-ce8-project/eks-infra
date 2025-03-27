@@ -2,10 +2,20 @@ name: 'Deploy Retail App'
 
 on:
   workflow_dispatch:
+    inputs:
+      region:
+        description: "AWS region"
+        required: true
+        default: "ap-southeast-1"
       
 env:
   EKS_REGION: "ap-southeast-1"
   EKS_CLUSTER: "ce8-g1-capstone-cluster"
+  OIDC_ROLE: ${{ secrets.OIDC_ROLE }}
+
+permissions:  
+  id-token: write       # Required for OIDC
+  contents: read        # To read repo content
 
 jobs:
   deploy:
@@ -20,7 +30,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.OIDC_ROLE }}
-          aws-region: ${{ vars.EKS_REGION }}
+          aws-region: ${{ inputs.region }}
         
       - name: Install kubectl
         run: |
