@@ -42,6 +42,12 @@ jobs:
 
           kubectl version --client
 
+      - name: Export terraform outputs
+        id: tfout
+        run: |
+          echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
+        working-directory: ./terraform/eks-cluster
+        
       - name: Connect to EKS cluster
         run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
 
