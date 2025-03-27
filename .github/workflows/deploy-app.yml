@@ -1,4 +1,4 @@
-name: 'Deploy Retail App'
+name: "Deploy Retail App"
 
 on:
   workflow_dispatch:
@@ -7,15 +7,15 @@ on:
         description: "AWS region"
         required: true
         default: "ap-southeast-1"
-      
+
 env:
   EKS_REGION: "ap-southeast-1"
   EKS_CLUSTER: "ce8-g1-capstone-cluster"
   OIDC_ROLE: ${{ secrets.OIDC_ROLE }}
 
-permissions:  
-  id-token: write       # Required for OIDC
-  contents: read        # To read repo content
+permissions:
+  id-token: write # Required for OIDC
+  contents: read # To read repo content
 
 jobs:
   deploy:
@@ -25,13 +25,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.OIDC_ROLE }}
           aws-region: ${{ inputs.region }}
-        
+
       - name: Install kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -39,17 +39,19 @@ jobs:
           echo "$(<kubectl.sha256) kubectl" | sha256sum --check
 
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-          
+
           kubectl version --client
-          
-      - name: Connect to EKS cluster 
+
+      - name: Connect to EKS cluster
         run: aws eks --region ${{ vars.EKS_REGION }} update-kubeconfig --name ${{ vars.EKS_CLUSTER }}
-      
-      - name: Create namespace
-        run: |
-          kubectl create namespace shop
-          
+
+      # - name: Create namespace
+      #   run: |
+      #     kubectl create namespace shop
       - name: Deploy shop app
         run: |
-          kubectl apply -f ./apps/shop/shop.yaml -n shop
-          kubectl apply -f ./apps/shop/ingress.yaml -n shop
+          kubectl apply -k apps/shop
+          kubectl wait --for=condition=available deployments --all
+
+        # kubectl apply -f ./apps/shop/shop.yaml -n shop
+        # kubectl apply -f ./apps/shop/ingress.yaml -n shop
