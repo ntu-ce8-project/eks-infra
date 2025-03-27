@@ -1,59 +1,42 @@
-name: Cluster Creation & Helm Bootstrap
+name: Create and Bootstrap Cluster
 
 on:
   workflow_dispatch:
     inputs:
-      region:
-        description: "AWS region"
+      ingress-external-dns:
+        description: "Ingress and External DNS"
+        type: boolean
+        default: true
         required: true
-        default: "ap-southeast-1"
-      nginx-ingress:
-        type: choice
-        description: "Deploy Nginx Ingress Controller?"
-        options:
-          - "true"
-          - "false"
-        default: "false"
+
+      retail-store:
+        description: "Online Retail Store"
+        type: boolean
+        default: true
         required: true
-      external-dns:
-        type: choice
-        description: "Deploy ExternalDNS?"
-        options:
-          - "true"
-          - "false"
-        default: "false"
+
+      metrics-server:
+        description: "Metrics Server"
+        type: boolean
+        default: true
         required: true
-      cert-manager:
-        type: choice
-        description: "Deploy CertManager?"
-        options:
-          - "true"
-          - "false"
-        default: "false"
-        required: true
-      argocd:
-        type: choice
-        description: "Deploy ArgoCD?"
-        options:
-          - "true"
-          - "false"
-        default: "false"
-        required: true
+      
       monitoring:
-        type: choice
-        description: "Deploy Prometheus and Grafana?"
-        options:
-          - "true"
-          - "false"
-        default: "false"
+        description: "Prometheus and Grafana"
+        type: boolean
+        default: false
         required: true
+
       logging:
-        type: choice
-        description: "Deploy Loki?"
-        options:
-          - "true"
-          - "false"
-        default: "false"
+        description: "Loki"
+        type: boolean
+        default: false
+        required: true
+      
+      argocd:
+        description: "ArgoCD"
+        type: boolean
+        default: false
         required: true
 
 permissions:  
@@ -61,7 +44,7 @@ permissions:
   contents: read        # To read repo content
 
 env:
-  OIDC_ROLE: ${{ secrets.OIDC_ROLE }}
+  region: "ap-southeast-1"
 
 jobs:
   deploy:
@@ -78,8 +61,8 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.OIDC_ROLE }}
-          aws-region: ${{ inputs.region }}
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -93,13 +76,13 @@ jobs:
       - name: Terraform Plan
         working-directory: ./terraform/eks-cluster
         env:
-          TF_VAR_region: ${{ inputs.region }}
+          TF_VAR_region: ${{ env.region }}
         run: terraform plan
         
       - name: Terraform Apply
         working-directory: ./terraform/eks-cluster
         env:
-          TF_VAR_region: ${{ inputs.region }}
+          TF_VAR_region: ${{ env.region }}
         run: terraform apply -auto-approve
 
       - name: Export terraform outputs
@@ -110,6 +93,7 @@ jobs:
           echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -json external_dns_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
 
   bootstrap:
+    name: Helm Bootstrap
     runs-on: ubuntu-latest
     needs: [deploy]
 
@@ -120,60 +104,70 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.OIDC_ROLE }}
-          aws-region: ${{ inputs.region }}
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
       
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}
 
       - name: Deploy Nginx Ingress Controller
-        if: ${{ github.event.inputs.nginx-ingress == 'true' }}
+        if: ${{ github.event.inputs.ingress-external-dns }}
+        working-directory: ./addons/nginx-ingress
         run: |
-          cd addons/nginx-ingress
           chmod +x init.sh
           ./init.sh
 
-      - name: Deploy ExternalDNS for Route53
-        if: ${{ github.event.inputs.external-dns == 'true' }}
+      - name: Deploy External DNS for Route53
+        if: ${{ github.event.inputs.ingress-external-dns }}
         env:
-          REGION: ${{ github.event.inputs.region }}
+          REGION: ${{ env.region }}
           EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
+        working-directory: ./addons/r53-externaldns
         run: |
-          cd addons/r53-externaldns
           envsubst < values.yaml > values.tmp && mv values.tmp values.yaml
           chmod +x init.sh
           ./init.sh
 
+      - name: Deploy Online Retail Store
+        if: ${{ github.event.inputs.retail-store }}
+        working-directory: ./apps/shop
+        run: |
+          kubectl apply -k .
+
       - name: Deploy Cert Manager
-        if: ${{ github.event.inputs.cert-manager == 'true' }}
         env:
           EMAIL: ${{ secrets.EMAIL_ADDRESS }}
+        working-directory: ./addons/cert-manager
         run: |
-          cd addons/cert-manager
           chmod +x init.sh
-          ./init.sh
-          
+          ./init.sh          
           envsubst < cluster-issuer-prod.yaml | kubectl apply -f -
           envsubst < cluster-issuer-staging.yaml | kubectl apply -f -
-
-      - name: Deploy ArgoCD
-        if: ${{ github.event.inputs.argocd == 'true' }}
+      
+      - name: Deploy Metrics Server
+        if: ${{ github.event.inputs.metrics-server }}
+        working-directory: ./addons/metrics-server
         run: |
-          cd addons/argocd
           chmod +x init.sh
           ./init.sh
 
       - name: Deploy Prometheus and Grafana
-        if: ${{ github.event.inputs.monitoring == 'true' }}
+        if: ${{ github.event.inputs.monitoring }}
+        working-directory: ./addons/kube-prometheus-stack
         run: |
-          cd addons/kube-prometheus-stack
           chmod +x init.sh
           ./init.sh
 
       - name: Deploy Loki
-        if: ${{ github.event.inputs.logging == 'true' }}
+        if: ${{ github.event.inputs.logging }}
+        working-directory: ./addons/loki
         run: |
-          cd addons/loki
           chmod +x init.sh
           ./init.sh
-
+      
+      - name: Deploy ArgoCD
+        if: ${{ github.event.inputs.argocd }}
+        working-directory: ./addons/argocd
+        run: |
+          chmod +x init.sh
+          ./init.sh
