@@ -8,23 +8,26 @@ Clone the repository.
 git clone 
 ```
 
-Stash your changes or commit them locally.
+Pull all changes from the remote repository before making code changes.
 
 ```sh
-git stash
+git pull origin main
 ```
 
-Pull all changes from the remote repository. Do this before you push your code changes.
+## Branch naming convention
+
+Create a new branch.
 
 ```sh
-git pull --rebase
+git checkout -b "feature/some-new-feature"
 ```
 
-After pulling the changes you can unstash, commit, and push your changes.
+Use one of these branch naming conventions:
 
-```sh
-git stash pop
-```
+- `feature/some-feature` - for creating new features and tasks
+- `bugfix/some-fix` - for fixing bugs
+- `refactor/some-refactoring` - for chores and code clean up
+- `docs/some-documentation` - for documentation
 
 ## Deployment
 
@@ -46,7 +49,13 @@ Teardown the online retail store.
 kubectl delete -k apps/shop
 ```
 
-## Generating diagrams
+## Diagramming
+
+## Creating diagrams with Draw.io
+
+All diagrams should end in the `.drawio.svg` file format.
+
+### Generating diagrams with KubeDiagrams
 
 Download [KubeDiagrams](https://github.com/philippemerle/KubeDiagrams).
 
