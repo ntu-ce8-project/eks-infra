@@ -1,4 +1,4 @@
-name: Cleanup
+name: Cleanup-tmp
 
 on:
   workflow_dispatch:
