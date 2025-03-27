@@ -7,4 +7,3 @@ env:
   - name: AWS_DEFAULT_REGION
     value: ap-southeast-1
     # value: ${REGION} # change to region where EKS is installed
-policy: sync # Default is upsert-only

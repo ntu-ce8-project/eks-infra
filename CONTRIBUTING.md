@@ -8,22 +8,62 @@ Clone the repository.
 git clone 
 ```
 
-Stash your changes or commit them locally.
+Pull all changes from the remote repository before making code changes.
 
 ```sh
-git stash
+git pull origin main
 ```
 
-Pull all changes from the remote repository. Do this before you push your code changes.
+## Branch naming convention
+
+Create a new branch.
 
 ```sh
-git pull --rebase
+git checkout -b "feature/some-new-feature"
 ```
 
-After pulling the changes you can unstash, commit, and push your changes.
+Use one of these branch naming conventions:
 
-```sh
-git stash pop
+- `feature/some-feature` - for creating new features and tasks
+- `bugfix/some-fix` - for fixing bugs
+- `refactor/some-refactoring` - for chores and code clean up
+- `docs/some-documentation` - for documentation
+
+## Commit message convention
+
+To make it easier to look through commits, let's use some sensible commit message conventions.
+
+Use one of the following or something descriptive if none of these apply.
+
+- `task`
+- `fix`
+- `chore`
+- `docs`
+
+Examples:
+
+```txt
+task: add https functionality
+```
+
+```txt
+fix: edit typo in environment variable
+```
+
+```txt
+chore: refactor scripts to make them more readable
+```
+
+```txt
+docs: add architecture diagram
+```
+
+You can also add more details to your commits:
+
+```txt
+task: deploy retail store application
+
+The retail store application can be found in the `/app/shop` folder.
 ```
 
 ## Deployment
@@ -32,6 +72,7 @@ Deploy the online retail store.
 
 ```sh
 kubectl apply -k apps/shop
+kubectl wait --for=condition=available deployments --all
 ```
 
 Get the URL for the online retail store.
@@ -46,7 +87,13 @@ Teardown the online retail store.
 kubectl delete -k apps/shop
 ```
 
-## Generating diagrams
+## Diagramming
+
+## Creating diagrams with Draw.io
+
+All diagrams should end in the `.drawio.svg` file format.
+
+### Generating diagrams with KubeDiagrams
 
 Download [KubeDiagrams](https://github.com/philippemerle/KubeDiagrams).
 
