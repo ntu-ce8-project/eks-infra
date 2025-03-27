@@ -8,13 +8,14 @@ This capstone project aims to design, deploy, and manage a cloud-native retail s
 
 The retail store application is decomposed into a microservice architecture, allowing for independent development, deployment, and scaling of individual components. These microservices included:
 
-* **Product Catalog Service:** Manages product information.
-* **Inventory Service:** Tracks product availability.
+* **Storefront:** Provides the frontend user interface for the retail store.
+* **Product Catalog Service:** Manages product listing and details.
+* **Cart Service:** Manages customer shopping cart.
+* **Checkout Service:** Orchestrates the checkout process.
 * **Order Service:** Handles order placement and processing.
-* **Customer Service:** Manages customer profiles and interactions.
-* **Payment Service:** Processes payment transactions.
+* **Static Assets:** Serves static assets like images related to the product catalog.
 
-These microservices were containerized using Docker and orchestrated using Kubernetes, providing a scalable and resilient platform. Kubernetes facilitated automated deployments, resource management, and service discovery.
+These microservices are containerized using Docker with Kustomize customization and orchestrated using Kubernetes, providing a scalable and resilient platform.
 
 ## Observability
 
