@@ -38,26 +38,26 @@ jobs:
         run: terraform init
         working-directory: ./terraform/eks-cluster
 
-      # - name: Export terraform outputs
-      #   id: tfout
-      #   run: |
-      #     echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
-      #   working-directory: ./terraform/eks-cluster
+      - name: Export terraform outputs
+        id: tfout
+        run: |
+          echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
+        working-directory: ./terraform/eks-cluster
 
-      # - name: Update kubeconfig
-      #   run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
 
-      # - name: Uninstall all Helm releases
-      #   run: |
-      #     helm list -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read release ns
-      #     do
-      #       echo "Uninstalling Helm release: $release in namespace: $ns"
-      #       helm uninstall "$release" -n "$ns" || true
-      #     done
+      - name: Uninstall all Helm releases
+        run: |
+          helm list -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read release ns
+          do
+            echo "Uninstalling Helm release: $release in namespace: $ns"
+            helm uninstall "$release" -n "$ns" || true
+          done
 
-      # - name: Delete all remaining K8s resources
-      #   run: |
-      #     kubectl delete all --all -A || true
+      - name: Delete all remaining K8s resources
+        run: |
+          kubectl delete all --all -A || true
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
