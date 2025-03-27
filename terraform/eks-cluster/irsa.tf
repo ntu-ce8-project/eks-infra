@@ -75,14 +75,16 @@ module "ebs_csi_driver_role" {
 resource "aws_s3_bucket" "loki_chunks" {
   count = var.enable_loki_s3 ? 1 : 0
 
-  bucket_prefix = "${local.prefix}-loki-chunks-sctp"
+  # bucket_prefix = "${local.prefix}-loki-chunks-sctp"
+  bucket = "${local.prefix}-loki-chunks-sctp"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "loki_ruler" {
   count = var.enable_loki_s3 ? 1 : 0
 
-  bucket_prefix = "${local.prefix}-loki-ruler-sctp"
+  # bucket_prefix = "${local.prefix}-loki-ruler-sctp"
+  bucket = "${local.prefix}-loki-ruler-sctp"
   force_destroy = true
 }
 
