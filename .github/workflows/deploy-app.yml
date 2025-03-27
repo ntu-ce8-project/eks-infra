@@ -9,8 +9,8 @@ on:
         default: "ap-southeast-1"
 
 env:
-  EKS_REGION: "ap-southeast-1"
-  EKS_CLUSTER: "ce8-g1-capstone-cluster"
+  #EKS_REGION: "ap-southeast-1"
+  #EKS_CLUSTER: "ce8-g1-capstone-cluster"
   OIDC_ROLE: ${{ secrets.OIDC_ROLE }}
 
 permissions:
@@ -43,7 +43,9 @@ jobs:
           kubectl version --client
 
       - name: Connect to EKS cluster
-        run: aws eks --region ${{ vars.EKS_REGION }} update-kubeconfig --name ${{ vars.EKS_CLUSTER }}
+        run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
+
+        #  run: aws eks --region ${{ vars.EKS_REGION }} update-kubeconfig --name ${{ vars.EKS_CLUSTER }}
 
       # - name: Create namespace
       #   run: |
@@ -51,6 +53,6 @@ jobs:
       - name: Deploy shop app
         run: |
           kubectl apply -k apps/shop
-       
+
         # kubectl apply -f ./apps/shop/shop.yaml -n shop
         # kubectl apply -f ./apps/shop/ingress.yaml -n shop
