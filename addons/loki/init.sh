@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 # 1. Add Helm repositories
-# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add grafana https://grafana.github.io/helm-charts
 
 # Update repos to ensure we have the latest charts
 helm repo update
 
 # 2. Install or upgrade loki
-helm install --values values.yaml loki grafana/loki -n loki --create-namespace
-
+helm upgrade --install  loki grafana/loki /
+  --namespace loki --create-namespace /
+  --values values.yaml /
+  
 # 3. Install or upgrade promtail
-helm install promtail grafana/promtail --version 6.7.4
-
+helm upgrade --install promtail grafana/promtail --version 6.7.4
