@@ -51,7 +51,6 @@ jobs:
       - name: Deploy shop app
         run: |
           kubectl apply -k apps/shop
-          kubectl wait --for=condition=available deployments --all
-
+       
         # kubectl apply -f ./apps/shop/shop.yaml -n shop
         # kubectl apply -f ./apps/shop/ingress.yaml -n shop
