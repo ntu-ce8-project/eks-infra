@@ -38,11 +38,11 @@ jobs:
         run: terraform init
         working-directory: ./terraform/eks-cluster
 
-      - name: Export terraform outputs
-        id: tfout
-        run: |
-          echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
-        working-directory: ./terraform/eks-cluster
+      # - name: Export terraform outputs
+      #   id: tfout
+      #   run: |
+      #     echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
+      #   working-directory: ./terraform/eks-cluster
 
       # - name: Update kubeconfig
       #   run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
