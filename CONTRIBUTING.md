@@ -29,6 +29,43 @@ Use one of these branch naming conventions:
 - `refactor/some-refactoring` - for chores and code clean up
 - `docs/some-documentation` - for documentation
 
+## Commit message convention
+
+To make it easier to look through commits, let's use some sensible commit message conventions.
+
+Use one of the following or something descriptive if none of these apply.
+
+- `task`
+- `fix`
+- `chore`
+- `docs`
+
+Examples:
+
+```txt
+task: add https functionality
+```
+
+```txt
+fix: edit typo in environment variable
+```
+
+```txt
+chore: refactor scripts to make them more readable
+```
+
+```txt
+docs: add architecture diagram
+```
+
+You can also add more details to your commits:
+
+```txt
+task: deploy retail store application
+
+The retail store application can be found in the `/app/shop` folder.
+```
+
 ## Deployment
 
 Deploy the online retail store.
