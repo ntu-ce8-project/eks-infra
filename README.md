@@ -4,7 +4,7 @@
 
 This capstone project aims to design, deploy, and manage a cloud-native retail store microservice architecture on a Kubernetes cluster, emphasizing observability and secure external access. The project demonstrates a comprehensive understanding of modern cloud technologies and best practices.
 
-**Architecture and Implementation:**
+## Architecture and Implementation
 
 The retail store application is decomposed into a microservice architecture, allowing for independent development, deployment, and scaling of individual components. These microservices included:
 
@@ -16,7 +16,7 @@ The retail store application is decomposed into a microservice architecture, all
 
 These microservices were containerized using Docker and orchestrated using Kubernetes, providing a scalable and resilient platform. Kubernetes facilitated automated deployments, resource management, and service discovery.
 
-**Observability:**
+## Observability
 
 To ensure the health and performance of the microservices, a robust observability stack is implemented using:
 
@@ -25,7 +25,7 @@ To ensure the health and performance of the microservices, a robust observabilit
 
 This observability setup enables proactive monitoring, rapid troubleshooting, and performance optimization.
 
-**Secure External Access:**
+## Secure External Access
 
 To provide secure external access to the retail store application, the following technologies are employed:
 
@@ -36,10 +36,12 @@ To provide secure external access to the retail store application, the following
 
 This setup ensures secure and reliable access to the application from the public internet.
 
-**Key Technologies:**
+## Key Technologies
 
 * Kubernetes
-* Docker
+* Terraform
+* Helm
+* Kustomize
 * Prometheus
 * Grafana
 * External DNS
@@ -47,7 +49,7 @@ This setup ensures secure and reliable access to the application from the public
 * Ingress
 * Microservices Architecture
 
-**Project Outcomes:**
+## Project Outcomes
 
 * A fully functional retail store microservice architecture deployed on Kubernetes.
 * Comprehensive observability using Prometheus and Grafana.
@@ -55,7 +57,7 @@ This setup ensures secure and reliable access to the application from the public
 * Demonstrate proficiency in cloud-native technologies and best practices.
 * A solid foundation for building and managing scalable and resilient applications in a production environment.
 
-**Conclusion:**
+## Conclusion
 
 This capstone project successfully demonstrates the ability to design and implement a complex microservice architecture on Kubernetes, incorporating essential aspects of observability and secure access. The project provides valuable hands-on experience with modern cloud technologies and highlightes the importance of these technologies in building and managing scalable and reliable applications.
 
