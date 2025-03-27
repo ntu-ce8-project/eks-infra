@@ -35,6 +35,7 @@ Deploy the online retail store.
 
 ```sh
 kubectl apply -k apps/shop
+kubectl wait --for=condition=available deployments --all
 ```
 
 Get the URL for the online retail store.
