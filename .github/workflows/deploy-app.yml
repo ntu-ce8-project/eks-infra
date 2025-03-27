@@ -58,7 +58,7 @@ jobs:
         working-directory: ./terraform/eks-cluster
         
       - name: Connect to EKS cluster
-        run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
+        run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }} --region ${{ inputs.region }}
 
         #  run: aws eks --region ${{ vars.EKS_REGION }} update-kubeconfig --name ${{ vars.EKS_CLUSTER }}
 
