@@ -38,15 +38,10 @@ module "eks" {
       before_compute = true
       configuration_values = jsonencode({
         env = {
-          # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
           ENABLE_PREFIX_DELEGATION = "true"
           WARM_PREFIX_TARGET       = "1"
         }
       })
-      pod_identity_association = [{
-        role_arn        = module.aws_vpc_cni_ipv6_pod_identity.iam_role_arn
-        service_account = "aws-node"
-      }]
     }
     aws-ebs-csi-driver = {
       service_account_role_arn = try(module.ebs_csi_driver_role[0].iam_role_arn, null)
@@ -109,15 +104,4 @@ module "vpc" {
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
   }
-}
-
-module "aws_vpc_cni_ipv6_pod_identity" {
-  source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "~> 1.6"
-
-  name = "${local.prefix}-aws-vpc-cni-ipv6"
-
-  attach_aws_vpc_cni_policy = true
-  aws_vpc_cni_enable_ipv6   = true
-
 }
