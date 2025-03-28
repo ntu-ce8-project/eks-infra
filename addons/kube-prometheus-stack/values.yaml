@@ -3,7 +3,8 @@ prometheus:
     enabled: true
     ingressClassName: nginx
     annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      cert-manager.io/cluster-issuer: "letsencrypt-staging"
       external-dns.alpha.kubernetes.io/hostname: "admin-prom-ce8-g1.sctp-sandbox.com"
     hosts:
       - admin-prom-ce8-g1.sctp-sandbox.com
@@ -18,7 +19,8 @@ grafana:
     enabled: true
     ingressClassName: nginx
     annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      cert-manager.io/cluster-issuer: "letsencrypt-staging"
       external-dns.alpha.kubernetes.io/hostname: "admin-grafana-ce8-g1.sctp-sandbox.com"
     hosts:
       - admin-grafana-ce8-g1.sctp-sandbox.com
