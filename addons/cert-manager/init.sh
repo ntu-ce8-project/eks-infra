@@ -10,5 +10,6 @@ helm upgrade --install cert-manager jetstack/cert-manager \
   --version v1.17.0 \
   --values values.yaml
 
-kubectl apply -f cluster-issuer.yaml
+kubectl apply -f cluster-issuer-prod.yaml
+kubectl apply -f cluster-issuer-staging.yaml
 

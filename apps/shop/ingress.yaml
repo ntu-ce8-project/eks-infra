@@ -4,7 +4,8 @@ metadata:
   name: ui
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "shop.sctp-sandbox.com"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   ingressClassName: nginx
   tls:
