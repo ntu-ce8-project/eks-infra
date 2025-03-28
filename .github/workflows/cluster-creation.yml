@@ -143,13 +143,6 @@ jobs:
         working-directory: ./apps/shop
         run: |
           kubectl apply -k .
-      
-      # - name: Deploy Metrics Server
-      #   if: ${{ github.event.inputs.metrics-server }}
-      #   working-directory: ./addons/metrics-server
-      #   run: |
-      #     chmod +x init.sh
-      #     ./init.sh
 
       - name: Deploy Prometheus and Grafana
         if: ${{ github.event.inputs.monitoring }}
@@ -164,7 +157,14 @@ jobs:
         run: |
           chmod +x init.sh
           ./init.sh
-      
+
+      - name: Deploy Metrics Server
+        if: ${{ github.event.inputs.metrics-server }}
+        working-directory: ./addons/metrics-server
+        run: |
+          chmod +x init.sh
+          ./init.sh
+
       - name: Deploy ArgoCD
         if: ${{ github.event.inputs.argocd }}
         working-directory: ./addons/argocd
