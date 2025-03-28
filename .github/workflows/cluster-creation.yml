@@ -14,12 +14,6 @@ on:
         type: boolean
         default: true
         required: true
-
-      metrics-server:
-        description: "Metrics Server"
-        type: boolean
-        default: true
-        required: true
       
       monitoring:
         description: "Prometheus and Grafana"
@@ -139,34 +133,34 @@ jobs:
           envsubst < cluster-issuer-staging.yaml | kubectl apply -f -
       
       - name: Deploy Online Retail Store
-        if: ${{ github.event.inputs.retail-store }}
+        if: ${{ github.event.inputs.retail-store == 'true' }}
         working-directory: ./apps/shop
         run: |
           kubectl apply -k .
 
       - name: Deploy Prometheus and Grafana
-        if: ${{ github.event.inputs.monitoring }}
+        if: ${{ github.event.inputs.monitoring == 'true' }}
         working-directory: ./addons/kube-prometheus-stack
         run: |
           chmod +x init.sh
           ./init.sh
 
       - name: Deploy Loki
-        if: ${{ github.event.inputs.logging }}
+        if: ${{ github.event.inputs.logging == 'true' }}
         working-directory: ./addons/loki
         run: |
           chmod +x init.sh
           ./init.sh
-
+      
       - name: Deploy Metrics Server
-        if: ${{ github.event.inputs.metrics-server }}
+        if: ${{ github.event.inputs.monitoring == 'true' }}
         working-directory: ./addons/metrics-server
         run: |
           chmod +x init.sh
           ./init.sh
 
       - name: Deploy ArgoCD
-        if: ${{ github.event.inputs.argocd }}
+        if: ${{ github.event.inputs.argocd == 'true' }}
         working-directory: ./addons/argocd
         run: |
           chmod +x init.sh
