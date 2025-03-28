@@ -120,5 +120,4 @@ module "aws_vpc_cni_ipv6_pod_identity" {
   attach_aws_vpc_cni_policy = true
   aws_vpc_cni_enable_ipv6   = true
 
-  tags = local.tags
 }
