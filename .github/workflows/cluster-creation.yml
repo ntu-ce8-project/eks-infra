@@ -128,12 +128,6 @@ jobs:
           chmod +x init.sh
           ./init.sh
 
-      - name: Deploy Online Retail Store
-        if: ${{ github.event.inputs.retail-store }}
-        working-directory: ./apps/shop
-        run: |
-          kubectl apply -k .
-
       - name: Deploy Cert Manager
         env:
           EMAIL: ${{ secrets.EMAIL_ADDRESS }}
@@ -144,12 +138,18 @@ jobs:
           envsubst < cluster-issuer-prod.yaml | kubectl apply -f -
           envsubst < cluster-issuer-staging.yaml | kubectl apply -f -
       
-      - name: Deploy Metrics Server
-        if: ${{ github.event.inputs.metrics-server }}
-        working-directory: ./addons/metrics-server
+      - name: Deploy Online Retail Store
+        if: ${{ github.event.inputs.retail-store }}
+        working-directory: ./apps/shop
         run: |
-          chmod +x init.sh
-          ./init.sh
+          kubectl apply -k .
+      
+      # - name: Deploy Metrics Server
+      #   if: ${{ github.event.inputs.metrics-server }}
+      #   working-directory: ./addons/metrics-server
+      #   run: |
+      #     chmod +x init.sh
+      #     ./init.sh
 
       - name: Deploy Prometheus and Grafana
         if: ${{ github.event.inputs.monitoring }}
