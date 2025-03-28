@@ -1,52 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world-app
-
+  name: hello
+  labels:
+    app: hello
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: httpd-app
+      app: hello-echo
   template:
     metadata:
       labels:
-        app: httpd-app
+        app: hello-echo
     spec:
       containers:
-      - name: httpd-app
+      - name: hello-echo
         image: hashicorp/http-echo:0.2.3
-        args:
-        - "-text=$(WELCOME_MESSAGE)"
         ports:
         - containerPort: 5678
+        args:
+        - "-text=$(GREETING)"
         env:
-        - name: WELCOME_MESSAGE
+        - name: GREETING
           valueFrom:
             configMapKeyRef:
-              name: sample-config
-              key: welcome-message
+              name: hello-config
+              key: greeting
 
 ---
 
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sample-config
-
+  name: hello-config
 data:
-  welcome-message: "Hello, World!"
+  greeting: "Hello, World!"
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-service
-
+  name: hello
 spec:
   selector:
-    app: httpd-app
+    app: hello-echo
   ports:
   - protocol: TCP
     port: 80

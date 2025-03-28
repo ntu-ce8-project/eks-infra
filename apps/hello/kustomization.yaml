@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 metadata:
-  name: hello-world
+  name: hello
 
-namespace: hello-world
+namespace: hello
 
 resources:
-- hello-world.yaml
+- hello.yaml
 - ingress.yaml
 - namespace.yaml
