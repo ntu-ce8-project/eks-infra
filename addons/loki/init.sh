@@ -13,7 +13,9 @@ helm upgrade --install  loki grafana/loki \
   --values values.yaml 
 
 # 3. Install or upgrade promtail
-helm upgrade --install promtail grafana/promtail --version 6.7.4 \
+helm upgrade --install promtail grafana/promtail \
+  --atomic \
+  --version 6.7.4 \
   --namespace loki \
   --create-namespace \
   --values prom-values.yaml

@@ -7,7 +7,9 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 
 # 2. Install or upgrade prometheus
-helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 69.6.0 \
+helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+  --atomic \
+  --version 69.6.0 \
   --create-namespace \
   --namespace monitoring \
   --values values.yaml
