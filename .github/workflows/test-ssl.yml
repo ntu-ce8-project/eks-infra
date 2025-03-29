@@ -1,0 +1,23 @@
+name: Test OpenSSL Command and Generate Random String
+
+on:
+    workflow_dispatch:
+
+jobs:
+  test-openssl:
+    runs-on: ubuntu-latest  # You can also try other OS types (e.g., windows-latest or macos-latest)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check OpenSSL Version
+        run: |
+          echo "Checking if OpenSSL is available..."
+          openssl version
+
+      - name: Generate Random String with OpenSSL
+        run: |
+          echo "Generating random string using OpenSSL..."
+          RANDOM_STRING=$(openssl rand -base64 12)
+          echo "Random string: $RANDOM_STRING"
