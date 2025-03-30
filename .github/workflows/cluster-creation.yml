@@ -41,8 +41,8 @@ env:
   region: "ap-southeast-1"
 
 jobs:
-  deploy:
-    name: Terraform Deploy
+  create-cluster:
+    name: Create Cluster
     runs-on: ubuntu-latest
     outputs:
       cluster_name: ${{ steps.tfout.outputs.CLUSTER_NAME }}
@@ -86,10 +86,10 @@ jobs:
           echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
           echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -json external_dns_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
 
-  bootstrap:
-    name: Helm Bootstrap
+  metrics-server:
+    name: Metrics Server
     runs-on: ubuntu-latest
-    needs: [deploy]
+    needs: [create-cluster]
 
     steps:
       - name: Checkout code
@@ -102,7 +102,32 @@ jobs:
           aws-region: ${{ env.region }}
       
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --name ${{ needs.deploy.outputs.cluster_name }}
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
+
+      - name: Deploy Metrics Server
+        working-directory: ./addons/metrics-server
+        run: |
+          chmod +x init.sh
+          ./init.sh
+
+  ingress-external-dns:
+    name: Ingress and External DNS
+    runs-on: ubuntu-latest
+    needs: [create-cluster]
+    if: ${{ github.event.inputs.ingress-external-dns == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
 
       - name: Deploy Nginx Ingress Controller
         if: ${{ github.event.inputs.ingress-external-dns }}
@@ -115,12 +140,31 @@ jobs:
         if: ${{ github.event.inputs.ingress-external-dns }}
         env:
           REGION: ${{ env.region }}
-          EXTERNAL_DNS_ROLE_ARN: ${{ needs.deploy.outputs.external_dns_role_arn }}
+          EXTERNAL_DNS_ROLE_ARN: ${{ needs.create-cluster.outputs.external_dns_role_arn }}
         working-directory: ./addons/r53-externaldns
         run: |
           envsubst < values.yaml > values.tmp && mv values.tmp values.yaml
           chmod +x init.sh
           ./init.sh
+  
+  cert-manager:
+    name: Cert Manager
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress-external-dns]
+    if: ${{ github.event.inputs.ingress-external-dns == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
 
       - name: Deploy Cert Manager
         env:
@@ -132,17 +176,48 @@ jobs:
           envsubst < cluster-issuer-prod.yaml | kubectl apply -f -
           envsubst < cluster-issuer-staging.yaml | kubectl apply -f -
 
-      - name: Deploy Metrics Server
-        working-directory: ./addons/metrics-server
-        run: |
-          chmod +x init.sh
-          ./init.sh
+  online-retail-store:
+    name: Online Retail Store
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress-external-dns]
+    if: ${{ github.event.inputs.retail-store == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
           
       - name: Deploy Online Retail Store
-        if: ${{ github.event.inputs.retail-store == 'true' }}
         working-directory: ./apps/shop
         run: |
           kubectl apply -k .
+
+  argocd:
+    name: ArgoCD
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress-external-dns]
+    if: ${{ github.event.inputs.argocd == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
 
       - name: Deploy ArgoCD
         if: ${{ github.event.inputs.argocd == 'true' }}
@@ -151,12 +226,57 @@ jobs:
           chmod +x init.sh
           ./init.sh
 
+  prometheus-grafana:
+    name: Prometheus and Grafana
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress-external-dns]
+    if: ${{ github.event.inputs.monitoring == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
+
       - name: Deploy Prometheus and Grafana
         if: ${{ github.event.inputs.monitoring == 'true' }}
         working-directory: ./addons/kube-prometheus-stack
         run: |
           chmod +x init.sh
           ./init.sh
+          
+      - name: Deploy Loki
+        if: ${{ github.event.inputs.logging == 'true' }}
+        working-directory: ./addons/loki
+        run: |
+          chmod +x init.sh
+          ./init.sh
+
+  loki:
+    name: Loki
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress-external-dns]
+    if: ${{ github.event.inputs.logging == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
           
       - name: Deploy Loki
         if: ${{ github.event.inputs.logging == 'true' }}
