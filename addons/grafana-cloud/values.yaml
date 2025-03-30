@@ -29,6 +29,13 @@ destinations:
       enabled: false
     traces:
       enabled: true
+  - name: grafana-cloud-profiles
+    type: pyroscope
+    url: https://profiles-prod-007.grafana.net:443
+    auth:
+      type: basic
+      username: "1213879"
+      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
 clusterMetrics:
   enabled: true
   opencost:
@@ -43,7 +50,13 @@ clusterMetrics:
           url: https://prometheus-prod-37-prod-ap-southeast-1.grafana.net/api/prom
   kepler:
     enabled: true
+annotationAutodiscovery:
+  enabled: true
+prometheusOperatorObjects:
+  enabled: true
 clusterEvents:
+  enabled: true
+nodeLogs:
   enabled: true
 podLogs:
   enabled: true
@@ -60,6 +73,13 @@ applicationObservability:
     zipkin:
       enabled: true
       port: 9411
+  connectors:
+    grafanaCloudMetrics:
+      enabled: true
+autoInstrumentation:
+  enabled: true
+profiling:
+  enabled: true
 alloy-metrics:
   enabled: true
   alloy:
@@ -186,6 +206,38 @@ alloy-receiver:
             fieldPath: spec.nodeName
       - name: GCLOUD_FM_COLLECTOR_ID
         value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-receiver-$(NODE_NAME)
+  remoteConfig:
+    enabled: true
+    url: https://fleet-management-prod-013.grafana.net
+    auth:
+      type: basic
+      username: "1213879"
+      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+alloy-profiles:
+  enabled: true
+  alloy:
+    extraEnv:
+      - name: GCLOUD_RW_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: alloy-profiles-remote-cfg-grafana-k8s-monitoring
+            key: password
+      - name: CLUSTER_NAME
+        value: ce8-g1-capstone-cluster
+      - name: NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+      - name: GCLOUD_FM_COLLECTOR_ID
+        value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-profiles-$(NODE_NAME)
   remoteConfig:
     enabled: true
     url: https://fleet-management-prod-013.grafana.net
