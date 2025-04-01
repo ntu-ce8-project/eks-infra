@@ -312,6 +312,8 @@ jobs:
 
       - name: Deploy Grafana cloud monitoring
         if: ${{ github.event.inputs.cloud-monitoring == 'true' }}
+        env:
+          GRAFANA_CLOUD_ACCESS_POLICY_TOKEN: ${{ secrets.GRAFANA_CLOUD_ACCESS_POLICY_TOKEN }}        
         working-directory: ./addons/grafana-cloud
         run: |
           envsubst < values.yaml > values.tmp && mv values.tmp values.yaml
