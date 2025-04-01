@@ -127,6 +127,11 @@ spec:
                 name: catalog
             - secretRef:
                 name: catalog-db
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://grafana-k8s-monitoring-alloy-receiver.grafana-cloud.svc.cluster.local:4318"  # OTLP/HTTP endpoint
+            - name: OTEL_SERVICE_NAME
+              value: "catalog"  # Service name for trace identification                
           securityContext:
             capabilities:
               drop:
@@ -338,6 +343,10 @@ spec:
           env:
             - name: JAVA_OPTS
               value: -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://grafana-k8s-monitoring-alloy-receiver.grafana-cloud.svc.cluster.local:4318"  # OTLP/HTTP endpoint
+            - name: OTEL_SERVICE_NAME
+              value: "carts"  # Service name for trace identification               
           envFrom:
             - configMapRef:
                 name: carts
@@ -575,6 +584,10 @@ spec:
           env:
             - name: JAVA_OPTS
               value: -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://grafana-k8s-monitoring-alloy-receiver.grafana-cloud.svc.cluster.local:4318"  # OTLP/HTTP endpoint
+            - name: OTEL_SERVICE_NAME
+              value: "orders"  # Service name for trace identification              
           envFrom:
             - secretRef:
                 name: orders-rabbitmq
@@ -838,6 +851,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: checkout
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://grafana-k8s-monitoring-alloy-receiver.grafana-cloud.svc.cluster.local:4318"  # OTLP/HTTP endpoint
+            - name: OTEL_SERVICE_NAME
+              value: "checkout"  # Service name for trace identification                
           securityContext:
             capabilities:
               drop:
@@ -1014,6 +1032,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://grafana-k8s-monitoring-alloy-receiver.grafana-cloud.svc.cluster.local:4318"  # OTLP/HTTP endpoint
+            - name: OTEL_SERVICE_NAME
+              value: "ui"  # Service name for trace identification                   
           envFrom:
             - configMapRef:
                 name: ui
