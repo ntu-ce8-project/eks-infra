@@ -7,14 +7,14 @@ destinations:
     auth:
       type: basic
       username: "2351997"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
   - name: grafana-cloud-logs
     type: loki
     url: https://logs-prod-020.grafana.net/loki/api/v1/push
     auth:
       type: basic
       username: "1171676"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
   - name: grafana-cloud-traces
     type: otlp
     url: https://tempo-prod-14-prod-ap-southeast-1.grafana.net:443
@@ -22,7 +22,7 @@ destinations:
     auth:
       type: basic
       username: "1165989"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
     metrics:
       enabled: false
     logs:
@@ -35,7 +35,7 @@ destinations:
     auth:
       type: basic
       username: "1213879"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
 clusterMetrics:
   enabled: true
   opencost:
@@ -107,7 +107,7 @@ alloy-metrics:
     auth:
       type: basic
       username: "1213879"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
 alloy-singleton:
   enabled: true
   alloy:
@@ -135,7 +135,7 @@ alloy-singleton:
     auth:
       type: basic
       username: "1213879"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
 alloy-logs:
   enabled: true
   alloy:
@@ -167,7 +167,7 @@ alloy-logs:
     auth:
       type: basic
       username: "1213879"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
 alloy-receiver:
   enabled: true
   alloy:
@@ -212,7 +212,7 @@ alloy-receiver:
     auth:
       type: basic
       username: "1213879"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
 alloy-profiles:
   enabled: true
   alloy:
@@ -244,4 +244,4 @@ alloy-profiles:
     auth:
       type: basic
       username: "1213879"
-      password: ${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}
+      password: "${GRAFANA_CLOUD_ACCESS_POLICY_TOKEN}"
