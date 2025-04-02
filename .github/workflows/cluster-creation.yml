@@ -278,5 +278,4 @@ jobs:
         if: ${{ github.event.inputs.karpenter == 'true' }}
         working-directory: ./addons/karpenter
         run: |
-          # chmod +x init.sh
-          # ./init.sh      
+          echo "Karpenter autoscaler is not yet implemented"
