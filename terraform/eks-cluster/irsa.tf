@@ -133,7 +133,7 @@ module "ebs_csi_driver_role" {
 ###############################
 
 resource "aws_iam_policy" "karpenter_controller" {
-  name        = "KarpenterController"
+  name        = "${local.prefix}-KarpenterController"
   path        = "/"
   description = "Karpenter controller policy for autoscaling"
   policy      = <<EOF
@@ -194,14 +194,14 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "karpenter" {
-  name = "KarpenterNodeInstanceProfile"
+  name = "${local.prefix}-KarpenterNodeInstanceProfile"
   role = module.eks.eks_managed_node_groups.CE8-G1-capstone-eks-ng.iam_role_name
 }
 
 module "karpenter_irsa_role" {
   source    = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version   = "5.32.1"
-  role_name = "karpenter_controller"
+  role_name = "${local.prefix}-karpenter_controller"
 
   role_policy_arns = {
     policy = aws_iam_policy.karpenter_controller.arn
