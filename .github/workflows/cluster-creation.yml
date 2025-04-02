@@ -15,24 +15,12 @@ on:
         default: true
         required: true
       
-      monitoring:
-        description: "Prometheus and Grafana"
-        type: boolean
-        default: false
-        required: true
-
       cloud-monitoring:
           description: "Grafana cloud monitoring"
           type: boolean
           default: false
           required: true        
 
-      # logging:
-      #   description: "Loki"
-      #   type: boolean
-      #   default: false
-      #   required: true
-      
       argocd:
         description: "ArgoCD"
         type: boolean
@@ -231,65 +219,6 @@ jobs:
         run: |
           chmod +x init.sh
           ./init.sh
-
-  prometheus-grafana:
-    name: Prometheus and Grafana
-    runs-on: ubuntu-latest
-    needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.monitoring == 'true' }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS Credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.OIDC_ROLE }}
-          aws-region: ${{ env.region }}
-      
-      - name: Update kubeconfig
-        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
-
-      - name: Deploy Prometheus and Grafana
-        if: ${{ github.event.inputs.monitoring == 'true' }}
-        working-directory: ./addons/kube-prometheus-stack
-        run: |
-          chmod +x init.sh
-          ./init.sh
-          
-      - name: Deploy Loki
-        if: ${{ github.event.inputs.logging == 'true' }}
-        working-directory: ./addons/loki
-        run: |
-          chmod +x init.sh
-          ./init.sh
-
-  # loki:
-  #   name: Loki
-  #   runs-on: ubuntu-latest
-  #   needs: [create-cluster, ingress-external-dns]
-  #   if: ${{ github.event.inputs.logging == 'true' }}
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Configure AWS Credentials via OIDC
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: ${{ secrets.OIDC_ROLE }}
-  #         aws-region: ${{ env.region }}
-      
-  #     - name: Update kubeconfig
-  #       run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
-          
-  #     - name: Deploy Loki
-  #       if: ${{ github.event.inputs.logging == 'true' }}
-  #       working-directory: ./addons/loki
-  #       run: |
-  #         chmod +x init.sh
-  #         ./init.sh
 
   grafana-cloud:
     name: Grafana cloud monitoring
