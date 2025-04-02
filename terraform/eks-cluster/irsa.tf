@@ -195,11 +195,11 @@ EOF
 
 resource "aws_iam_instance_profile" "karpenter" {
   name = "KarpenterNodeInstanceProfile"
-  role = module.eks.eks_managed_node_groups.regular.iam_role_name
+  role = module.eks.eks_managed_node_groups.CE8-G1-capstone-eks-ng.iam_role_name
 }
 
 module "karpenter_irsa_role" {
-  source    = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source    = "terraform-aws-modules/iam/aws/modules/iam-role-for-service-accounts-eks"
   version   = "5.32.1"
   role_name = "karpenter_controller"
 
@@ -208,7 +208,7 @@ module "karpenter_irsa_role" {
   }
 
   karpenter_controller_cluster_id         = module.eks.cluster_id
-  karpenter_controller_node_iam_role_arns = [module.eks.eks_managed_node_groups["regular"].iam_role_arn]
+  karpenter_controller_node_iam_role_arns = [module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn]
 
   oidc_providers = {
     main = {
