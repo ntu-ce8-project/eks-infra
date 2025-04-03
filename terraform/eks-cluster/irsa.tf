@@ -505,30 +505,31 @@ EOF
 # EOF
 # }
 
-# resource "aws_iam_instance_profile" "karpenter" {
-#   name = "${local.prefix}-KarpenterNodeInstanceProfile"
-#   role = module.eks.eks_managed_node_groups.CE8-G1-capstone-eks-ng.iam_role_name
-# }
+### where is this used??
+resource "aws_iam_instance_profile" "karpenter" {
+  name = "${local.prefix}-KarpenterNodeInstanceProfile"
+  role = module.eks.eks_managed_node_groups.CE8-G1-capstone-eks-ng.iam_role_name
+}
 
-# module "karpenter_irsa_role" {
-#   source    = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-#   version   = "5.32.1"
-#   role_name = "${local.prefix}-karpenter_controller"
+module "karpenter_irsa_role" {
+  source    = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version   = "5.32.1"
+  role_name = "${local.prefix}-karpenter_controller"
 
-#   role_policy_arns = {
-#     policy = aws_iam_policy.karpenter_controller_policy.arn
-#   }
+  role_policy_arns = {
+    policy = aws_iam_policy.karpenter_controller.arn
+  }
 
-#   karpenter_controller_cluster_id         = module.eks.cluster_id
-#   karpenter_controller_node_iam_role_arns = [module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn]
+  karpenter_controller_cluster_id         = module.eks.cluster_id
+  karpenter_controller_node_iam_role_arns = [module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn]
 
-#   oidc_providers = {
-#     main = {
-#       provider_arn               = module.eks.oidc_provider_arn
-#       namespace_service_accounts = ["kube-system:karpenter"]
-#     }
-#   }
-# }
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:karpenter"]
+    }
+  }
+}
 
 resource "aws_sqs_queue" "karpenter_interruption_queue" {
   name                      = module.eks.cluster_name
