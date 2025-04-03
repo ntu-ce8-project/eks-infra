@@ -185,8 +185,8 @@ resource "aws_iam_policy" "karpenter_controller_policy" {
           "ec2:CreateFleet"
         ]
         Resource = [
-          "arn:aws:ec2:${var.region}::image/*",
-          "arn:aws:ec2:${var.region}::snapshot/*",
+          "arn:aws:ec2:${var.region}:image/*",
+          "arn:aws:ec2:${var.region}:snapshot/*",
           "arn:aws:ec2:${var.region}:*:security-group/*",
           "arn:aws:ec2:${var.region}:*:subnet/*",
           "arn:aws:ec2:${var.region}:*:capacity-reservation/*"
