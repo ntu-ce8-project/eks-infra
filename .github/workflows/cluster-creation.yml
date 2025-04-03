@@ -210,7 +210,7 @@ jobs:
           run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
             
         - name: Deploy Online Retail Store
-          working-directory: ./apps/shop/overlays/production
+          working-directory: ./apps/shop/overlays/prod
           run: |
             kubectl apply -k .
 
