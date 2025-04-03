@@ -537,22 +537,27 @@ resource "aws_sqs_queue" "karpenter_interruption_queue" {
 }
 
 resource "aws_sqs_queue_policy" "karpenter_interruption_queue_policy" {
-  queue_url = aws_sqs_queue.karpenter_interruption_queue.url
+  queue_url = aws_sqs_queue.karpenter_interruption_queue.id
+
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17" # !! Important !!
     Statement = [
       {
+        Sid    = "AllowInterruptionQueueActions"
         Effect = "Allow"
         Principal = {
-          Service = "events.amazonaws.com"
+          Service = [
+            "events.amazonaws.com",
+            "sqs.amazonaws.com"
+          ]
         }
         Action   = "sqs:SendMessage"
         Resource = aws_sqs_queue.karpenter_interruption_queue.arn
       },
       {
-        Sid      = "DenyHTTP"
-        Effect   = "Deny"
-        Action   = "sqs:*"
+        Sid    = "DenyHTTP"
+        Effect = "Deny"
+        Action  = "sqs:*"
         Resource = aws_sqs_queue.karpenter_interruption_queue.arn
         Condition = {
           Bool = {
