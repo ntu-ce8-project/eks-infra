@@ -15,7 +15,7 @@ on:
       cloud-monitoring:
           description: "Grafana Cloud"
           type: boolean
-          default: false
+          default: true
           required: true        
 
       argocd:
