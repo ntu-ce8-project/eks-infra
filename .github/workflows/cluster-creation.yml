@@ -44,6 +44,7 @@ jobs:
   create-cluster:
     name: Create Cluster
     runs-on: ubuntu-latest
+    timeout-minutes: 45 #change timeout to 45 minutes
     outputs:
       cluster_name: ${{ steps.tfout.outputs.CLUSTER_NAME }}
       external_dns_role_arn: ${{ steps.tfout.outputs.EXTERNAL_DNS_ROLE_ARN }}
