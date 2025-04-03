@@ -4,9 +4,7 @@ metadata:
   name: ui
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "shop.sctp-sandbox.com"
-    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # we do not want to redirect http to https for load testing
 spec:
   ingressClassName: nginx
   tls:
