@@ -570,58 +570,58 @@ resource "aws_sqs_queue_policy" "karpenter_interruption_queue_policy" {
   })
 }
 
-# resource "aws_cloudwatch_event_rule" "scheduled_change_rule" {
-#   name        = "ScheduledChangeRule"
-#   description = "Rule to handle AWS Health Events"
-#   event_pattern = jsonencode({
-#     source      = ["aws.health"]
-#     detail-type = ["AWS Health Event"]
-#   })
-# }
+resource "aws_cloudwatch_event_rule" "scheduled_change_rule" {
+  name        = "${local.prefix}-ScheduledChangeRule"
+  description = "Rule to handle AWS Health Events"
+  event_pattern = jsonencode({
+    source      = ["aws.health"]
+    detail-type = ["AWS Health Event"]
+  })
+}
 
-# resource "aws_cloudwatch_event_target" "scheduled_change_target" {
-#   rule = aws_cloudwatch_event_rule.scheduled_change_rule.name
-#   arn  = aws_sqs_queue.karpenter_interruption_queue.arn
-# }
+resource "aws_cloudwatch_event_target" "scheduled_change_target" {
+  rule = aws_cloudwatch_event_rule.scheduled_change_rule.name
+  arn  = aws_sqs_queue.karpenter_interruption_queue.arn
+}
 
-# resource "aws_cloudwatch_event_rule" "spot_interruption_rule" {
-#   name        = "SpotInterruptionRule"
-#   description = "Rule to handle EC2 Spot Instance Interruption Warnings"
-#   event_pattern = jsonencode({
-#     source      = ["aws.ec2"]
-#     detail-type = ["EC2 Spot Instance Interruption Warning"]
-#   })
-# }
+resource "aws_cloudwatch_event_rule" "spot_interruption_rule" {
+  name        = "${local.prefix}-SpotInterruptionRule"
+  description = "Rule to handle EC2 Spot Instance Interruption Warnings"
+  event_pattern = jsonencode({
+    source      = ["aws.ec2"]
+    detail-type = ["EC2 Spot Instance Interruption Warning"]
+  })
+}
 
-# resource "aws_cloudwatch_event_target" "spot_interruption_target" {
-#   rule = aws_cloudwatch_event_rule.spot_interruption_rule.name
-#   arn  = aws_sqs_queue.karpenter_interruption_queue.arn
-# }
+resource "aws_cloudwatch_event_target" "spot_interruption_target" {
+  rule = aws_cloudwatch_event_rule.spot_interruption_rule.name
+  arn  = aws_sqs_queue.karpenter_interruption_queue.arn
+}
 
-# resource "aws_cloudwatch_event_rule" "rebalance_rule" {
-#   name        = "RebalanceRule"
-#   description = "Rule to handle EC2 Instance Rebalance Recommendations"
-#   event_pattern = jsonencode({
-#     source      = ["aws.ec2"]
-#     detail-type = ["EC2 Instance Rebalance Recommendation"]
-#   })
-# }
+resource "aws_cloudwatch_event_rule" "rebalance_rule" {
+  name        = "${local.prefix}-RebalanceRule"
+  description = "Rule to handle EC2 Instance Rebalance Recommendations"
+  event_pattern = jsonencode({
+    source      = ["aws.ec2"]
+    detail-type = ["EC2 Instance Rebalance Recommendation"]
+  })
+}
 
-# resource "aws_cloudwatch_event_target" "rebalance_target" {
-#   rule = aws_cloudwatch_event_rule.rebalance_rule.name
-#   arn  = aws_sqs_queue.karpenter_interruption_queue.arn
-# }
+resource "aws_cloudwatch_event_target" "rebalance_target" {
+  rule = aws_cloudwatch_event_rule.rebalance_rule.name
+  arn  = aws_sqs_queue.karpenter_interruption_queue.arn
+}
 
-# resource "aws_cloudwatch_event_rule" "instance_state_change_rule" {
-#   name        = "InstanceStateChangeRule"
-#   description = "Rule to handle EC2 Instance State-change Notifications"
-#   event_pattern = jsonencode({
-#     source      = ["aws.ec2"]
-#     detail-type = ["EC2 Instance State-change Notification"]
-#   })
-# }
+resource "aws_cloudwatch_event_rule" "instance_state_change_rule" {
+  name        = "${local.prefix}-InstanceStateChangeRule"
+  description = "Rule to handle EC2 Instance State-change Notifications"
+  event_pattern = jsonencode({
+    source      = ["aws.ec2"]
+    detail-type = ["EC2 Instance State-change Notification"]
+  })
+}
 
-# resource "aws_cloudwatch_event_target" "instance_state_change_target" {
-#   rule = aws_cloudwatch_event_rule.instance_state_change_rule.name
-#   arn  = aws_sqs_queue.karpenter_interruption_queue.arn
-# }
+resource "aws_cloudwatch_event_target" "instance_state_change_target" {
+  rule = aws_cloudwatch_event_rule.instance_state_change_rule.name
+  arn  = aws_sqs_queue.karpenter_interruption_queue.arn
+}
