@@ -141,7 +141,6 @@ jobs:
     name: Cert Manager
     runs-on: ubuntu-latest
     needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.ingress-external-dns == 'true' }}
 
     steps:
       - name: Checkout code
