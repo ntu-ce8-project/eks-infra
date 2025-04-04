@@ -4,7 +4,6 @@ kind: Kustomization
 metadata:
   name: shop
 
-nameSuffix: -staging
 namespace: shop-staging
 
 resources:
@@ -12,4 +11,5 @@ resources:
 - namespace.yaml
 
 patches:
-  - path: letsencrypt-staging.yaml
+  - path: patches/letsencrypt-staging.yaml
+  - path: patches/hostname-staging.yaml
