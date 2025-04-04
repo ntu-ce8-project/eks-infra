@@ -1,3 +1,8 @@
+echo "Installing Karpenter..."
+
+echo "cluster name: ${CLUSTER_NAME}"
+echo "cluster endpoint: ${CLUSTER_ENDPOINT}"
+
 helm repo add karpenter https://charts.karpenter.sh
 
 helm repo update

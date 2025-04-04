@@ -88,6 +88,7 @@ jobs:
         id: tfout
         run: |
           echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
+          echo "CLUSTER_ENDPOINT=$(terraform output -raw cluster_endpoint)" >> $GITHUB_OUTPUT
           echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -json external_dns_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
 
   metrics-server:
@@ -307,3 +308,6 @@ jobs:
         working-directory: ./addons/karpenter
         run: |
           echo "Karpenter autoscaler is not yet implemented"
+          # envsubst < init.sh > init.tmp && mv init.tmp init.sh
+          chmod +x init.sh
+          ./init.sh
