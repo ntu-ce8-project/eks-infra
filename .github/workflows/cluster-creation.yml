@@ -27,6 +27,15 @@ on:
         default: false
         required: true
 
+      retail-store-v2:
+        description: "Online Retail Store v2"
+        type: choice
+        options:
+          - "staging"
+          - "production"
+        default: "staging"
+        required: true
+
 permissions:  
   id-token: write       # Required for OIDC
   contents: read        # To read repo content
@@ -191,6 +200,30 @@ jobs:
           
       - name: Deploy Online Retail Store
         working-directory: ./apps/shop
+        run: |
+          kubectl apply -k .
+  
+  online-retail-store-v2:
+    name: Online Retail Store v2
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress-external-dns]
+    if: ${{ github.event.inputs.retail-store-v2 == 'staging' || github.event.inputs.retail-store-v2 == 'production' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
+          
+      - name: Deploy Online Retail Store
+        working-directory: ./apps/shop-v2/overlays/${{ github.event.inputs.retail-store-v2 }}
         run: |
           kubectl apply -k .
 
