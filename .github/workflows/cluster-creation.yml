@@ -1,21 +1,17 @@
 name: Create and Bootstrap Cluster
+run-name: online retail store (${{ github.event.inputs.retail-store }})
 
 on:
   workflow_dispatch:
     inputs:
-      ingress-external-dns:
-        description: "Ingress and External DNS"
-        type: boolean
-        default: true
-        required: true
-
       retail-store:
         description: "Retail Store"
         type: choice
         options:
-          - "v1"
-          - "v2"
-        default: "v2"
+          - "dev" # deploys app/shop
+          - "staging" # deploys app/shop-v2 (staging)
+          - "prod" # deploys app/shop-v2 (prod)
+        default: "staging"
         required: true
       
       cloud-monitoring:
@@ -116,11 +112,10 @@ jobs:
           chmod +x init.sh
           ./init.sh
 
-  ingress-external-dns:
-    name: Ingress and External DNS
+  ingress:
+    name: Ingress Controller
     runs-on: ubuntu-latest
     needs: [create-cluster]
-    if: ${{ github.event.inputs.ingress-external-dns == 'true' }}
 
     steps:
       - name: Checkout code
@@ -136,14 +131,30 @@ jobs:
         run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
 
       - name: Deploy Nginx Ingress Controller
-        if: ${{ github.event.inputs.ingress-external-dns }}
         working-directory: ./addons/nginx-ingress
         run: |
           chmod +x init.sh
           ./init.sh
 
+  external-dns:
+    name: External DNS
+    runs-on: ubuntu-latest
+    needs: [create-cluster, ingress]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
+          aws-region: ${{ env.region }}
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
+
       - name: Deploy External DNS for Route53
-        if: ${{ github.event.inputs.ingress-external-dns }}
         env:
           REGION: ${{ env.region }}
           EXTERNAL_DNS_ROLE_ARN: ${{ needs.create-cluster.outputs.external_dns_role_arn }}
@@ -156,8 +167,7 @@ jobs:
   cert-manager:
     name: Cert Manager
     runs-on: ubuntu-latest
-    needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.ingress-external-dns == 'true' }}
+    needs: [create-cluster, ingress, external-dns]
 
     steps:
       - name: Checkout code
@@ -185,8 +195,8 @@ jobs:
   online-retail-store:
     name: Online Retail Store
     runs-on: ubuntu-latest
-    needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.retail-store == 'v1' }}
+    needs: [create-cluster, ingress, external-dns, cert-manager]
+    if: ${{ github.event.inputs.retail-store == 'dev' }}
 
     steps:
       - name: Checkout code
@@ -209,8 +219,8 @@ jobs:
   online-retail-store-v2:
     name: Online Retail Store v2
     runs-on: ubuntu-latest
-    needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.retail-store == 'v2' }}
+    needs: [create-cluster, ingress, external-dns, cert-manager]
+    if: ${{ github.event.inputs.retail-store == 'staging' || github.event.inputs.retail-store == 'prod' }}
 
     steps:
       - name: Checkout code
@@ -226,14 +236,14 @@ jobs:
         run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
           
       - name: Deploy Online Retail Store
-        working-directory: ./apps/shop-v2/overlays/staging
+        working-directory: ./apps/shop-v2/overlays/${{ github.event.inputs.retail-store }}
         run: |
           kubectl apply -k .
 
   argocd:
     name: ArgoCD
     runs-on: ubuntu-latest
-    needs: [create-cluster, ingress-external-dns]
+    needs: [create-cluster, ingress, external-dns, cert-manager]
     if: ${{ github.event.inputs.argocd == 'true' }}
 
     steps:
@@ -259,7 +269,7 @@ jobs:
   grafana-cloud:
     name: Grafana cloud monitoring
     runs-on: ubuntu-latest
-    needs: [create-cluster, ingress-external-dns]
+    needs: [create-cluster, ingress, external-dns, cert-manager]
     if: ${{ github.event.inputs.cloud-monitoring == 'true' }}
 
     steps:
