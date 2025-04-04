@@ -50,6 +50,7 @@ jobs:
     timeout-minutes: 45 #change timeout to 45 minutes
     outputs:
       cluster_name: ${{ steps.tfout.outputs.CLUSTER_NAME }}
+      cluster_endpoint: ${{ steps.tfout.outputs.CLUSTER_ENDPOINT }}
       external_dns_role_arn: ${{ steps.tfout.outputs.EXTERNAL_DNS_ROLE_ARN }}
 
     steps:
@@ -305,6 +306,9 @@ jobs:
 
       - name: Deploy AWS Karpenter autoscaler
         if: ${{ github.event.inputs.karpenter == 'true' }}
+        env:
+          CLUSTER_NAME: ${{ needs.create-cluster.outputs.cluster_name }}
+          CLUSTER_ENDPOINT: ${{ needs.create-cluster.outputs.cluster_endpoint }}        
         working-directory: ./addons/karpenter
         run: |
           echo "Karpenter autoscaler is not yet implemented"
