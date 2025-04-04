@@ -1,5 +1,5 @@
 name: Create and Bootstrap Cluster
-run-name: online retail store (${{ github.event.inputs.retail-store }})
+run-name: Deploy shop (${{ github.event.inputs.retail-store }})
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ on:
         required: true
       
       cloud-monitoring:
-          description: "Grafana cloud monitoring"
+          description: "Grafana Cloud monitoring"
           type: boolean
           default: false
           required: true        
@@ -258,7 +258,7 @@ jobs:
           ./init.sh
 
   grafana-cloud:
-    name: Grafana cloud monitoring
+    name: Grafana Cloud monitoring
     runs-on: ubuntu-latest
     needs: [create-cluster, ingress, external-dns, cert-manager]
     if: ${{ github.event.inputs.cloud-monitoring == 'true' }}
@@ -276,7 +276,7 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
 
-      - name: Deploy Grafana cloud monitoring
+      - name: Deploy Grafana Cloud monitoring
         if: ${{ github.event.inputs.cloud-monitoring == 'true' }}
         env:
           GRAFANA_CLOUD_ACCESS_POLICY_TOKEN: ${{ secrets.GRAFANA_CLOUD_ACCESS_POLICY_TOKEN }}        
