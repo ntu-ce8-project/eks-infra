@@ -10,9 +10,12 @@ on:
         required: true
 
       retail-store:
-        description: "Online Retail Store"
-        type: boolean
-        default: true
+        description: "Retail Store"
+        type: choice
+        options:
+          - "v1"
+          - "v2"
+        default: "v2"
         required: true
       
       cloud-monitoring:
@@ -25,15 +28,6 @@ on:
         description: "ArgoCD"
         type: boolean
         default: false
-        required: true
-
-      retail-store-v2:
-        description: "Online Retail Store v2"
-        type: choice
-        options:
-          - "staging"
-          - "production"
-        default: "staging"
         required: true
 
 permissions:  
@@ -183,7 +177,7 @@ jobs:
     name: Online Retail Store
     runs-on: ubuntu-latest
     needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.retail-store == 'true' }}
+    if: ${{ github.event.inputs.retail-store == 'v1' }}
 
     steps:
       - name: Checkout code
@@ -207,7 +201,7 @@ jobs:
     name: Online Retail Store v2
     runs-on: ubuntu-latest
     needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.retail-store-v2 == 'staging' || github.event.inputs.retail-store-v2 == 'production' }}
+    if: ${{ github.event.inputs.retail-store == 'v2' }}
 
     steps:
       - name: Checkout code
@@ -223,7 +217,7 @@ jobs:
         run: aws eks update-kubeconfig --name ${{ needs.create-cluster.outputs.cluster_name }}
           
       - name: Deploy Online Retail Store
-        working-directory: ./apps/shop-v2/overlays/${{ github.event.inputs.retail-store-v2 }}
+        working-directory: ./apps/shop-v2/overlays/staging
         run: |
           kubectl apply -k .
 
