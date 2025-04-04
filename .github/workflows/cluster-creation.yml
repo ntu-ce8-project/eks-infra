@@ -14,7 +14,8 @@ on:
         type: choice
         options:
           - "dev" # deploys app/shop
-          - "staging" # deploys app/shop-v2
+          - "staging" # deploys app/shop-v2 (staging)
+          - "prod" # deploys app/shop-v2 (prod)
         default: "staging"
         required: true
       
@@ -201,7 +202,7 @@ jobs:
     name: Online Retail Store v2
     runs-on: ubuntu-latest
     needs: [create-cluster, ingress-external-dns]
-    if: ${{ github.event.inputs.retail-store == 'staging' }}
+    if: ${{ github.event.inputs.retail-store == 'staging' || github.event.inputs.retail-store == 'prod' }}
 
     steps:
       - name: Checkout code
