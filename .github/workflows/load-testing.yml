@@ -37,6 +37,6 @@ jobs:
           K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
         with:
           cloud-run-locally: false
-          flags: --verbose --vus ${{ github.event.inputs.users }} --duration $${{ github.event.inputs.duration }}
+          flags: --verbose --vus ${{ github.event.inputs.users }} --duration ${{ github.event.inputs.duration }}
           path: |
             ./load-testing/k6/test-${{ github.event.inputs.environment }}.js
