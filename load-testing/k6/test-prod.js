@@ -1,5 +1,11 @@
-import http from 'k6/http';
-import { sleep } from 'k6';
+import tempo from "https://jslib.k6.io/http-instrumentation-tempo/1.0.0/index.js";
+import http from "k6/http";
+import { sleep } from "k6";
+
+// instrumentHTTP ensures requests made by the http module will have a trace context attached
+tempo.instrumentHTTP({
+  propagator: "w3c",
+});
 
 export const options = {
   cloud: {
@@ -10,7 +16,7 @@ export const options = {
   },
 };
 
-export default function() {
+export default function () {
   http.get("https://postman-echo.com/get?hello=world");
   sleep(1);
 }
