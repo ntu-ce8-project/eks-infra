@@ -9,7 +9,7 @@ tempo.instrumentHTTP({
 
 export const options = {
   cloud: {
-    name: "Load test (staging)",
+    name: "User makes purchase (staging)",
     distribution: { 'amazon:sg:singapore': { loadZone: 'amazon:sg:singapore', percent: 100 } },
     apm: [],
   },
