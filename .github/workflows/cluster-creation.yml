@@ -48,6 +48,9 @@ jobs:
       cluster_name: ${{ steps.tfout.outputs.CLUSTER_NAME }}
       cluster_endpoint: ${{ steps.tfout.outputs.CLUSTER_ENDPOINT }}
       external_dns_role_arn: ${{ steps.tfout.outputs.EXTERNAL_DNS_ROLE_ARN }}
+      karpenter_controller_role_arn: ${{ steps.tfout.outputs.KARPENTER_CONTROLLER_ROLE_ARN }}
+      karpenter_node_role_arn: ${{ steps.tfout.outputs.KARPENTER_NODE_ROLE_ARN }}
+      karpenter_node_role_name: ${{ steps.tfout.outputs.KARPENTER_NODE_ROLE_NAME }}
 
     steps:
       - name: Checkout code
@@ -87,6 +90,9 @@ jobs:
           echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
           echo "CLUSTER_ENDPOINT=$(terraform output -raw cluster_endpoint)" >> $GITHUB_OUTPUT
           echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -json external_dns_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
+          echo "KARPENTER_CONTROLLER_ROLE_ARN=$(terraform output -json karpenter_controller_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
+          echo "KARPENTER_NODE_ROLE_ARN=$(terraform output -json karpenter_node_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
+          echo "KARPENTER_NODE_ROLE_NAME"="$(terraform output -json karpenter_node_role_name | jq -r '.[0]')" >> $GITHUB_OUTPUT
 
   metrics-server:
     name: Metrics Server
@@ -318,7 +324,10 @@ jobs:
         if: ${{ github.event.inputs.karpenter == 'true' }}
         env:
           CLUSTER_NAME: ${{ needs.create-cluster.outputs.cluster_name }}
-          CLUSTER_ENDPOINT: ${{ needs.create-cluster.outputs.cluster_endpoint }}        
+          CLUSTER_ENDPOINT: ${{ needs.create-cluster.outputs.cluster_endpoint }}  
+          KARPENTER_CONTROLLER_ROLE_ARN: ${{ needs.create-cluster.outputs.karpenter_controller_role_arn }}
+          KARPENTER_NODE_ROLE_ARN: ${{ needs.create-cluster.outputs.karpenter_node_role_arn }}
+          KARPENTER_NODE_ROLE_NAME: ${{ needs.create-cluster.outputs.karpenter_node_role_name }}      
         working-directory: ./addons/karpenter
         run: |
           echo "Karpenter autoscaler is not yet implemented"
