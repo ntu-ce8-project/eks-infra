@@ -4,16 +4,6 @@ run-name: Load test (${{ github.event.inputs.environment }})
 on:
   workflow_dispatch:
     inputs:
-      duration:
-        description: "Duration of the test"
-        type: string
-        default: 20s
-        required: true
-      users:
-        description: "Number of virtual users"
-        type: number
-        default: 10
-        required: true
       environment:
         description: "Environment to run load tests against"
         type: choice
@@ -37,6 +27,6 @@ jobs:
           K6_CLOUD_PROJECT_ID: ${{ secrets.K6_CLOUD_PROJECT_ID }}
         with:
           cloud-run-locally: false
-          flags: --verbose --vus ${{ github.event.inputs.users }} --duration ${{ github.event.inputs.duration }}
+          flags: --verbose
           path: |
             ./load-testing/k6/test-${{ github.event.inputs.environment }}.js
