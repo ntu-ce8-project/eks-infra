@@ -5,8 +5,7 @@ export const options = {
   cloud: {
     name: "Load test (staging)",
     distribution: {
-      singapore: { loadZone: "amazon:sg:singapore", percent: 80 },
-      paris: { loadZone: "amazon:fr:paris", percent: 20 },
+      singapore: { loadZone: "amazon:sg:singapore", percent: 100 },
     },
   },
 };
