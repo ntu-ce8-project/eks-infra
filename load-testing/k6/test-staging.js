@@ -7,6 +7,8 @@ tempo.instrumentHTTP({
   propagator: "w3c",
 });
 
+const BASE_URL = "http://shop-staging.sctp-sandbox.com";
+
 export const options = {
   cloud: {
     name: "User makes purchase (staging)",
@@ -37,14 +39,14 @@ export function scenario() {
   group("Cart - user adds item to cart", function () {
     // Add item to cart
     response = http.post(
-      "http://shop-staging.sctp-sandbox.com/cart",
+      `${BASE_URL}/cart`,
       {
         productId: "a1258cd2-176c-4507-ade6-746dab5ad625",
       },
       {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
-          origin: "http://shop-staging.sctp-sandbox.com",
+          origin: BASE_URL,
           "upgrade-insecure-requests": "1",
         },
       }
@@ -54,7 +56,7 @@ export function scenario() {
 
   group("Checkout - user checks out", function () {
     // Checkout
-    response = http.get("http://shop-staging.sctp-sandbox.com/checkout", {
+    response = http.get(`${BASE_URL}/checkout`, {
       headers: {
         "upgrade-insecure-requests": "1",
       },
@@ -63,7 +65,7 @@ export function scenario() {
 
     // Checkout
     response = http.post(
-      "http://shop-staging.sctp-sandbox.com/checkout",
+      `${BASE_URL}/checkout`,
       {
         firstName: "John",
         lastName: "Doe",
@@ -76,7 +78,7 @@ export function scenario() {
       {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
-          origin: "http://shop-staging.sctp-sandbox.com",
+          origin: BASE_URL,
           "upgrade-insecure-requests": "1",
         },
       }
@@ -87,14 +89,14 @@ export function scenario() {
   group("Delivery - user selects delivery", function () {
     // Delivery
     response = http.post(
-      "http://shop-staging.sctp-sandbox.com/checkout/delivery",
+      `${BASE_URL}/checkout/delivery`,
       {
         token: "priority-mail",
       },
       {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
-          origin: "http://shop-staging.sctp-sandbox.com",
+          origin: BASE_URL,
           "upgrade-insecure-requests": "1",
         },
       }
@@ -105,7 +107,7 @@ export function scenario() {
   group("Payment - user makes payment", function () {
     // Payment
     response = http.post(
-      "http://shop-staging.sctp-sandbox.com/checkout/payment",
+      `${BASE_URL}/checkout/payment`,
       {
         cardHolder: "John Doe",
         cardNumber: "1234567890123456",
@@ -115,7 +117,7 @@ export function scenario() {
       {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
-          origin: "http://shop-staging.sctp-sandbox.com",
+          origin: BASE_URL,
           "upgrade-insecure-requests": "1",
         },
       }
