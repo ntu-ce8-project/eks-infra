@@ -31,7 +31,7 @@ export const options = {
   },
 };
 
-export default function () {
+export function scenario() {
   let response;
 
   group("Cart - user adds item to cart", function () {
@@ -121,4 +121,8 @@ export default function () {
       }
     );
   });
+}
+
+export default function () {
+  scenario();
 }
