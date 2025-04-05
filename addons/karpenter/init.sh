@@ -5,6 +5,7 @@ echo "cluster endpoint: ${CLUSTER_ENDPOINT}"
 echo "karpenter controller role arn: ${KARPENTER_CONTROLLER_ROLE_ARN}"
 echo "karpenter node role arn: ${KARPENTER_NODE_ROLE_ARN}"
 echo "karpenter node role name: ${KARPENTER_NODE_ROLE_NAME}"
+echo "karpenter node instance profile name: ${KARPENTER_NODE_INSTANCE_PROFILE_NAME}"
 
 
 export KARPENTER_NAMESPACE="kube-system"
@@ -14,14 +15,23 @@ helm repo add karpenter https://charts.karpenter.sh
 
 helm repo update
 
-# helm install karpenter karpenter/karpenter \
-#   --namespace kube-system \
-#   --create-namespace \
-#   --version v0.28.0 \
-#   --set serviceAccount.create=false \
-#   --set serviceAccount.name=karpenter \
-#   --set controller.clusterName=$CLUSTER_NAME \
-#   --set controller.clusterEndpoint=$CLUSTER_ENDPOINT \
-#   --set defaultProvisioner.provisionerName=default \
-#   --set defaultProvisioner.clusterName=$CLUSTER_NAME \
-#   --set defaultProvisioner.clusterEndpoint=$CLUSTER_ENDPOINT
+
+### FOR INITIAL INSTALLATION ONLY ###
+# helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KARPENTER_VERSION}" --namespace "${KARPENTER_NAMESPACE}" \
+#     --set "settings.clusterName=${CLUSTER_NAME}" \
+#     --set "settings.interruptionQueue=${CLUSTER_NAME}" \
+#     --set "serviceAccount.annotations.eks\.amazonaws\.com/role-arn=${KARPENTER_CONTROLLER_ROLE_ARN}" \
+#     --set controller.resources.requests.cpu=1 \
+#     --set controller.resources.requests.memory=1Gi \
+#     --set controller.resources.limits.cpu=1 \
+#     --set controller.resources.limits.memory=1Gi > karpenter.yaml
+
+helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version ${KARPENTER_VERSION} --namespace ${KARPENTER_NAMESPACE} \
+--set settings.aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
+--set settings.clusterName=${CLUSTER_NAME} \
+--set "settings.interruptionQueue=${CLUSTER_NAME}" \
+--set serviceAccount.annotations."eks.amazonaws.com/role-arn"="${KARPENTER_CONTROLLER_ROLE_ARN}" \
+--set controller.resources.requests.cpu=1 \
+--set controller.resources.requests.memory=1Gi \
+--set controller.resources.limits.cpu=1 \
+--set controller.resources.limits.memory=1Gi > karpenter.yaml

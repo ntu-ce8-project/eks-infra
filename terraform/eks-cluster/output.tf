@@ -34,6 +34,10 @@ output "karpenter_controller_role_arn" {
   value = module.karpenter_irsa_role.iam_role_arn
 }
 
+output "karpenter_node_instance_profile_name" {
+  value = aws_iam_instance_profile.karpenter.role_name
+} 
+
 # output "loki_s3_role_arn" {
 #   value = module.loki_s3_role[*].iam_role_arn
 # }

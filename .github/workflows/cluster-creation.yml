@@ -50,6 +50,7 @@ jobs:
       karpenter_controller_role_arn: ${{ steps.tfout.outputs.KARPENTER_CONTROLLER_ROLE_ARN }}
       karpenter_node_role_arn: ${{ steps.tfout.outputs.KARPENTER_NODE_ROLE_ARN }}
       karpenter_node_role_name: ${{ steps.tfout.outputs.KARPENTER_NODE_ROLE_NAME }}
+      karpenter_node_instance_profile_name: ${{ steps.tfout.outputs.KARPENTER_NODE_INSTANCE_PROFILE_NAME }}
 
     steps:
       - name: Checkout code
@@ -92,6 +93,7 @@ jobs:
           echo "KARPENTER_CONTROLLER_ROLE_ARN=$(terraform output -json karpenter_controller_role_arn)" >> $GITHUB_OUTPUT
           echo "KARPENTER_NODE_ROLE_ARN=$(terraform output -json karpenter_node_role_arn)" >> $GITHUB_OUTPUT
           echo "KARPENTER_NODE_ROLE_NAME"="$(terraform output -json karpenter_node_role_name)" >> $GITHUB_OUTPUT
+          echo "KARPENTER_NODE_INSTANCE_PROFILE_NAME"="$(terraform output -json karpenter_node_instance_profile_name)" >> $GITHUB_OUTPUT
 
   metrics-server:
     name: Metrics Server
@@ -302,7 +304,8 @@ jobs:
           CLUSTER_ENDPOINT: ${{ needs.create-cluster.outputs.cluster_endpoint }}  
           KARPENTER_CONTROLLER_ROLE_ARN: ${{ needs.create-cluster.outputs.karpenter_controller_role_arn }}
           KARPENTER_NODE_ROLE_ARN: ${{ needs.create-cluster.outputs.karpenter_node_role_arn }}
-          KARPENTER_NODE_ROLE_NAME: ${{ needs.create-cluster.outputs.karpenter_node_role_name }}      
+          KARPENTER_NODE_ROLE_NAME: ${{ needs.create-cluster.outputs.karpenter_node_role_name }}  
+          KARPENTER_NODE_INSTANCE_PROFILE_NAME: ${{ needs.create-cluster.outputs.karpenter_node_instance_profile_name }}    
         working-directory: ./addons/karpenter
         run: |
           echo "Karpenter autoscaler is not yet implemented"
