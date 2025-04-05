@@ -20,12 +20,12 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/powered_by-kubernetes-blue?style=flat&logo=kubernetes&logoColor=white">
-  <img src="https://img.shields.io/badge/built_for-aws_eks-orange?style=flat&logo=amazonwebservices">
+  <img src="https://img.shields.io/badge/kubernetes-blue?style=flat&logo=kubernetes&logoColor=white">
+  <img src="https://img.shields.io/badge/aws_eks-orange?style=flat&logo=amazonwebservices">
 
-  <img src="https://img.shields.io/badge/github_actions-workflows-lightgrey?style=flat&logo=github">
-  <img src="https://img.shields.io/badge/helm-charts-blue?style=flat&logo=helm">
-  <img src="https://img.shields.io/badge/iac-terraform-mediumpurple?style=flat&logo=terraform">
+  <img src="https://img.shields.io/badge/github_actions-grey?style=flat&logo=github">
+  <img src="https://img.shields.io/badge/helm_charts-blue?style=flat&logo=helm">
+  <img src="https://img.shields.io/badge/terraform-lavender?style=flat&logo=terraform">
 
   <img src="https://img.shields.io/badge/load_testing-k6-mediumpurple?style=flat&logo=k6">
   <img src="https://img.shields.io/badge/dashboard-grafana_cloud-orange?style=flat&logo=grafana">
