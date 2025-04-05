@@ -7,8 +7,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/actions/workflow/status/ntu-ce8-project/eks-infra/cluster-creation.yml">
+  <img src="https://img.shields.io/github/license/ntu-ce8-project/eks-infra">
+  <img src="https://img.shields.io/github/languages/top/ntu-ce8-project/eks-infra">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/github/commit-activity/t/ntu-ce8-project/eks-infra">
   <img src="https://img.shields.io/github/commit-activity/w/ntu-ce8-project/eks-infra">
+  <img src="https://img.shields.io/github/last-commit/ntu-ce8-project/eks-infra">
   <img src="https://img.shields.io/github/issues/ntu-ce8-project/eks-infra">
   <img src="https://img.shields.io/github/issues-closed/ntu-ce8-project/eks-infra">
 </p>
