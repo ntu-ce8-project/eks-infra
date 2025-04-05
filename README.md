@@ -9,6 +9,8 @@
   <img src="https://img.shields.io/github/actions/workflow/status/ntu-ce8-project/eks-infra/cluster-creation.yml">
   <img src="https://img.shields.io/github/license/ntu-ce8-project/eks-infra">
   <img src="https://img.shields.io/github/languages/top/ntu-ce8-project/eks-infra">
+  <img src="https://img.shields.io/github/repo-size/ntu-ce8-project/eks-infra">
+  <img src="https://img.shields.io/github/stars/ntu-ce8-project/eks-infra">
 </p>
 
 <p align="center">
