@@ -29,7 +29,7 @@ export const options = {
   },
 }
 
-export function scenario() {
+export default function() {
   let response
 
   group('Cart - user adds item to cart', function () {
