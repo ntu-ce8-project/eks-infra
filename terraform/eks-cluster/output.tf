@@ -35,7 +35,7 @@ output "karpenter_controller_role_arn" {
 }
 
 output "karpenter_node_instance_profile_name" {
-  value = aws_iam_instance_profile.karpenter.role_name
+  value = aws_iam_instance_profile.karpenter.id
 } 
 
 # output "loki_s3_role_arn" {
