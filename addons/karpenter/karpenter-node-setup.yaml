@@ -6,15 +6,19 @@ spec:
   amiFamily: AL2023
   amiSelectorTerms:
     - alias: al2023@latest
-  role: "${KARPENTER_ROLE_NAME}"
+  # Must specify one of "role" or "instanceProfile" for Karpenter to launch nodes
+  role: "${KARPENTER_NODE_ROLE_ARN}"
+  # Optional, IAM instance profile to use for the node identity.
+  # Must specify one of "role" or "instanceProfile" for Karpenter to launch nodes
+  # instanceProfile: "${KARPENTER_NODE_INSTANCE_PROFILE_NAME}"  
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: ${EKS_CLUSTER_NAME}
+        karpenter.sh/discovery: ${CLUSTER_NAME}
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: ${EKS_CLUSTER_NAME}
+        karpenter.sh/discovery: ${CLUSTER_NAME}
   tags:
-    app.kubernetes.io/created-by: eks-workshop
+    app.kubernetes.io/created-by: eks-cluster-provisioner
 ---
 apiVersion: karpenter.sh/v1
 kind: NodePool

@@ -311,7 +311,7 @@ jobs:
           KARPENTER_SQS_QUEUE_NAME: ${{ needs.create-cluster.outputs.karpenter_sqs_queue_name }}
         working-directory: ./addons/karpenter
         run: |
-          echo "Karpenter autoscaler is not yet implemented"
           # envsubst < init.sh > init.tmp && mv init.tmp init.sh
           chmod +x init.sh
           ./init.sh
+          envsubst < karpenter-node-setup.yaml | kubectl apply -f -
