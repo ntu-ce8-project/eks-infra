@@ -34,14 +34,14 @@ module "eks" {
     eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni = {
-      most_recent    = true
-      before_compute = true
-      configuration_values = jsonencode({
-        env = {
-          ENABLE_PREFIX_DELEGATION = "true"
-          WARM_PREFIX_TARGET       = "1"
-        }
-      })
+      # most_recent    = true
+      # before_compute = true
+      # configuration_values = jsonencode({
+      #   env = {
+      #     ENABLE_PREFIX_DELEGATION = "true"
+      #     WARM_PREFIX_TARGET       = "1"
+      #   }
+      # })
     }
     aws-ebs-csi-driver = {
       service_account_role_arn = try(module.ebs_csi_driver_role[0].iam_role_arn, null)
