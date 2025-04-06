@@ -91,11 +91,11 @@ jobs:
           echo "CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_OUTPUT
           echo "CLUSTER_ENDPOINT=$(terraform output -raw cluster_endpoint)" >> $GITHUB_OUTPUT
           echo "EXTERNAL_DNS_ROLE_ARN=$(terraform output -json external_dns_role_arn | jq -r '.[0]')" >> $GITHUB_OUTPUT
-          echo "KARPENTER_CONTROLLER_ROLE_ARN=$(terraform output -json karpenter_controller_role_arn)" >> $GITHUB_OUTPUT
-          echo "KARPENTER_NODE_ROLE_ARN=$(terraform output -json karpenter_node_role_arn)" >> $GITHUB_OUTPUT
-          echo "KARPENTER_NODE_ROLE_NAME"="$(terraform output -json karpenter_node_role_name)" >> $GITHUB_OUTPUT
-          echo "KARPENTER_NODE_INSTANCE_PROFILE_NAME"="$(terraform output -json karpenter_node_instance_profile_name)" >> $GITHUB_OUTPUT
-          echo "KARPENTER_SQS_QUEUE_NAME"="$(terraform output -json karpenter_sqs_queue_name)" >> $GITHUB_OUTPUT
+          echo "KARPENTER_CONTROLLER_ROLE_ARN=$(terraform output -raw karpenter_controller_role_arn)" >> $GITHUB_OUTPUT
+          echo "KARPENTER_NODE_ROLE_ARN=$(terraform output -raw karpenter_node_role_arn)" >> $GITHUB_OUTPUT
+          echo "KARPENTER_NODE_ROLE_NAME=$(terraform output -raw karpenter_node_role_name)" >> $GITHUB_OUTPUT
+          echo "KARPENTER_NODE_INSTANCE_PROFILE_NAME=$(terraform output -raw karpenter_node_instance_profile_name)" >> $GITHUB_OUTPUT
+          echo "KARPENTER_SQS_QUEUE_NAME=$(terraform output -raw karpenter_sqs_queue_name)" >> $GITHUB_OUTPUT
 
   metrics-server:
     name: Metrics Server
