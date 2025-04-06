@@ -281,7 +281,7 @@ jobs:
           ./init.sh
           
   karpenter:
-    name: AWS Karpenter autoscaler
+    name: Karpenter Autoscaler
     runs-on: ubuntu-latest
     needs: [create-cluster, metrics-server]
     if: ${{ github.event.inputs.karpenter == 'true' }}
