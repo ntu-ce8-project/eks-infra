@@ -16,7 +16,9 @@ spec:
         karpenter.sh/discovery: ${CLUSTER_NAME}
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: ${CLUSTER_NAME}
+        # karpenter.sh/discovery: ${CLUSTER_NAME}
+        # aws:eks:cluster-name: ${CLUSTER_NAME}
+        Name: ${CLUSTER_NAME}-node
   tags:
     app.kubernetes.io/created-by: eks-cluster-provisioner
 ---
