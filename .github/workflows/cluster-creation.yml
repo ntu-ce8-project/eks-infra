@@ -20,7 +20,7 @@ on:
           required: true        
 
       karpenter:
-          description: "AWS Karpenter autoscaler"
+          description: "Karpenter Autoscaler"
           type: boolean
           default: false
           required: true
