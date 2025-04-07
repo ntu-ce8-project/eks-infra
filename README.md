@@ -33,6 +33,9 @@
   <img src="https://img.shields.io/badge/dashboard-grafana_cloud-orange?style=flat&logo=grafana">
 </p>
 
+## Architecture
+
+![ecosystem](./docs/images/ecosystem.png)
 
 ## Progress
 
