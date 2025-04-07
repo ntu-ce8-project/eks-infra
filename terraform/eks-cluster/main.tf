@@ -103,7 +103,7 @@ module "karpenter" {
   # create_node_iam_role = false
   # node_iam_role_arn    = module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn
   queue_name                      = "${module.eks.cluster_name}"
-  rule_name_prefix                = "${local.prefix}-karpenter"
+  # rule_name_prefix                = "${local.prefix}-karpenter"
 
   node_iam_role_additional_policies = {
     AmazonSSMManagedInstanceCore        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
