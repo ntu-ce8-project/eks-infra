@@ -84,6 +84,36 @@ module "eks" {
   }
 }
 
+module "karpenter" {
+  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
+  version = "20.34.0"
+
+  cluster_name                    = module.eks.cluster_name
+  enable_pod_identity             = true
+  create_pod_identity_association = true
+  namespace                       = "kube-system"
+  iam_role_name                   = "${local.prefix}-karpenter_controller"
+  iam_role_use_name_prefix        = false
+  iam_policy_name                 = "${local.prefix}-KarpenterControllerPolicy"
+  iam_policy_use_name_prefix      = false
+  iam_policy_description         = "Karpenter controller policy with all necessary permissions"
+  node_iam_role_name              = "${local.prefix}-KarpenterNodeRole"
+  node_iam_role_use_name_prefix   = false
+  node_iam_role_description       = "Karpenter node role with all necessary permissions"
+  # create_node_iam_role = false
+  # node_iam_role_arn    = module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn
+  queue_name                      = "${module.eks.cluster_name}"
+  rule_name_prefix                = "${local.prefix}-karpenter"
+
+  node_iam_role_additional_policies = {
+    AmazonSSMManagedInstanceCore        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    AmazonEKS_CNI_Policy                = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+    AmazonEKSWorkerNodePolicy           = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+    AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  }
+}
+
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.8.1"

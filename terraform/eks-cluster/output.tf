@@ -23,15 +23,18 @@ output "external_dns_role_arn" {
 }
 
 output "karpenter_node_role_arn" {
-  value = aws_iam_role.karpenter_node_role.arn
+  # value = aws_iam_role.karpenter_node_role.arn
+  value = module.karpenter.node_iam_role_arn
 }
 
 output "karpenter_node_role_name" {
-  value = aws_iam_role.karpenter_node_role.id
+  # value = aws_iam_role.karpenter_node_role.id
+  value = module.karpenter.node_iam_role_name
 }
 
 output "karpenter_controller_role_arn" {
-  value = module.karpenter_irsa_role.iam_role_arn
+  # value = module.karpenter_irsa_role.iam_role_arn
+  value = module.karpenter.iam_role_arn
 }
 
 output "karpenter_node_instance_profile_name" {
@@ -39,7 +42,8 @@ output "karpenter_node_instance_profile_name" {
 } 
 
 output "karpenter_sqs_queue_name" {
-  value = aws_sqs_queue.karpenter_interruption_queue.name
+  # value = aws_sqs_queue.karpenter_interruption_queue.name
+  value = module.karpenter.queue_name
 }
 
 # output "loki_s3_role_arn" {
