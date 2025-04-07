@@ -29,8 +29,8 @@
   <img src="https://img.shields.io/badge/helm_charts-blue?style=flat&logo=helm">
   <img src="https://img.shields.io/badge/terraform-lavender?style=flat&logo=terraform">
 
-  <img src="https://img.shields.io/badge/load_testing-k6-mediumpurple?style=flat&logo=k6">
-  <img src="https://img.shields.io/badge/dashboard-grafana_cloud-orange?style=flat&logo=grafana">
+  <img src="https://img.shields.io/badge/k6-load_tested-mediumpurple?style=flat&logo=k6">
+  <img src="https://img.shields.io/badge/grafana-dashboards-orange?style=flat&logo=grafana">
 </p>
 
 ## Architecture
