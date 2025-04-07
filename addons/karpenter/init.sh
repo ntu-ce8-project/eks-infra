@@ -27,20 +27,20 @@ helm repo update
 #     --set controller.resources.limits.memory=1Gi > karpenter.yaml
 
 # helm registry logout public.ecr.aws
-# helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KARPENTER_VERSION}" \
-#   --namespace "${KARPENTER_NAMESPACE}" --create-namespace \
-#   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_CONTROLLER_ROLE_ARN} \
-#   --set settings.clusterName=${CLUSTER_NAME} \
-#   --set "settings.interruptionQueue=${KARPENTER_SQS_QUEUE_NAME}" \
-#   --set "settings.aws.defaultInstanceProfile=${KARPENTER_NODE_INSTANCE_PROFILE_NAME}" \
-#   --set settings.clusterEndpoint=${CLUSTER_ENDPOINT} \
-#   --set settings.featureGates.spotToSpotConsolidation=true \
-#   --set settings.interruptionQueue=${CLUSTER_NAME} \
-#   --set controller.resources.requests.cpu=1 \
-#   --set controller.resources.requests.memory=1Gi \
-#   --set controller.resources.limits.cpu=1 \
-#   --set controller.resources.limits.memory=1Gi \
-#   --wait
+helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --version "${KARPENTER_VERSION}" \
+  --namespace "${KARPENTER_NAMESPACE}" --create-namespace \
+  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_CONTROLLER_ROLE_ARN} \
+  --set settings.clusterName=${CLUSTER_NAME} \
+  --set "settings.interruptionQueue=${KARPENTER_SQS_QUEUE_NAME}" \
+  --set "settings.aws.defaultInstanceProfile=${KARPENTER_NODE_INSTANCE_PROFILE_NAME}" \
+  --set settings.clusterEndpoint=${CLUSTER_ENDPOINT} \
+  --set settings.featureGates.spotToSpotConsolidation=true \
+  --set settings.interruptionQueue=${CLUSTER_NAME} \
+  --set controller.resources.requests.cpu=1 \
+  --set controller.resources.requests.memory=1Gi \
+  --set controller.resources.limits.cpu=1 \
+  --set controller.resources.limits.memory=1Gi \
+  --wait
 
  
 # helm uninstall karpenter --namespace "${KARPENTER_NAMESPACE}"

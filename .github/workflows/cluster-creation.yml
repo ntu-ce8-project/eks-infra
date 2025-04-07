@@ -313,4 +313,5 @@ jobs:
         run: |
           chmod +x init.sh
           ./init.sh
+          envsubst < auth.yaml | kubectl apply -f -
           envsubst < karpenter-node-setup.yaml | kubectl apply -f -
