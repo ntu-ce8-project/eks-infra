@@ -35,7 +35,7 @@
 
 ## Architecture
 
-![ecosystem](./docs/images/ecosystem.png)
+![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
 
 ## Progress
 
