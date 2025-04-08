@@ -11,9 +11,6 @@ on:
 permissions:
   id-token: write       # Required for OIDC
   contents: read        # To read repo content
-
-env:            
-  OIDC_ROLE: arn:aws:iam::255945442255:role/github_oidc_role_ce8_capstone_G1
           
 jobs:
   cleanup:
@@ -27,7 +24,7 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.OIDC_ROLE }}
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
           aws-region: ${{ inputs.region }}
 
       - name: Setup Terraform
