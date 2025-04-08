@@ -45,6 +45,48 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name ${{ steps.tfout.outputs.CLUSTER_NAME }}
 
+      - name: Drain karpenter nodes
+        run: |
+          # Check if NodePool "default" exists
+          if kubectl get nodepool default &>/dev/null; then
+              echo "NodePool 'default' exists. Deleting..."
+              kubectl delete nodepool default
+          else
+              echo "NodePool 'default' does not exist. Skipping deletion."
+          fi
+          # Check if EC2NodeClass "default" exists
+          if kubectl get ec2nodeclass default &>/dev/null; then
+              echo "EC2NodeClass 'default' exists. Deleting..."
+              kubectl delete ec2nodeclass default
+          else
+              echo "EC2NodeClass 'default' does not exist. Skipping deletion."
+          fi
+          # Define the target node count and maximum wait time
+          TARGET_NODE_COUNT=3
+          MAX_WAIT_TIME=300  # Maximum wait time in seconds (5 minutes)
+          START_TIME=$(date +%s)  # Record the start time
+          # Function to get the current number of nodes
+          get_node_count() {
+              kubectl get nodes --no-headers | wc -l
+          }
+          # Loop until the desired node count is reached or the maximum wait time is exceeded
+          while true; do
+              CURRENT_NODE_COUNT=$(get_node_count)
+              echo "Current node count: $CURRENT_NODE_COUNT"
+              if [ "$CURRENT_NODE_COUNT" -le "$TARGET_NODE_COUNT" ]; then
+                  echo "Desired node count reached: $CURRENT_NODE_COUNT"
+                  break
+              fi
+              # Check if the maximum wait time has been exceeded
+              CURRENT_TIME=$(date +%s)
+              ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+              if [ "$ELAPSED_TIME" -ge "$MAX_WAIT_TIME" ]; then
+                  echo "Maximum wait time exceeded. Exiting loop."
+                  break
+              fi
+              sleep 5  # Wait for 5 seconds before checking again
+          done        
+
       - name: Uninstall all Helm releases
         run: |
           helm list -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read release ns
