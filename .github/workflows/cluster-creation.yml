@@ -254,7 +254,8 @@ jobs:
   grafana-cloud:
     name: Grafana Cloud monitoring
     runs-on: ubuntu-latest
-    needs: [create-cluster, ingress, external-dns, cert-manager]
+    # needs: [create-cluster, ingress, external-dns, cert-manager]
+    needs: [create-cluster] # test out deploying Grafana Cloud monitoring without the other dependencies
     if: ${{ github.event.inputs.cloud-monitoring == 'true' }}
 
     steps:
