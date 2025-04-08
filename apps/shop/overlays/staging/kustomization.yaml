@@ -9,7 +9,9 @@ namespace: shop-staging
 resources:
 - ../../base
 - namespace.yaml
+- hpa.yaml
 
 patches:
   - path: patches/letsencrypt-staging.yaml
   - path: patches/hostname-staging.yaml
+  - path: patches/resource-limit-cpu-ui.yaml
