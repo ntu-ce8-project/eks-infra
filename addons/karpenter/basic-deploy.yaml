@@ -13,8 +13,8 @@ spec:
       labels:
         app: inflate
     spec:
-      nodeSelector:
-        type: karpenter
+      # nodeSelector:
+      #   type: karpenter
       terminationGracePeriodSeconds: 0
       containers:
         - name: inflate
