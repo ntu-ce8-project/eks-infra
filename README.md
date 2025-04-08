@@ -33,10 +33,6 @@
   <img src="https://img.shields.io/badge/grafana-dashboards-orange?style=flat&logo=grafana">
 </p>
 
-## Architecture
-
-![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
-
 ## Progress
 
 Track the progress of this project from our [kanban](https://github.com/orgs/ntu-ce8-project/projects/2) and project [milestones](https://github.com/ntu-ce8-project/eks-infra/milestones).
@@ -48,3 +44,9 @@ For more details, read the [documentation](https://github.com/ntu-ce8-project/ek
 ## Contributors
 
 To contribute to the repository, follow our [contribution guidelines](/CONTRIBUTING.md).
+
+## Architecture
+
+![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
+
+![ecosystem](./docs/generated-diagrams/ecosystem/ecosystem.png)
