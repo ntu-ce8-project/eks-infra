@@ -47,6 +47,10 @@ To contribute to the repository, follow our [contribution guidelines](/CONTRIBUT
 
 ## Architecture
 
+This is the microservice architecture of the application.
+
 ![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
+
+This is the ecosystem of the entire cluster. It's massive!
 
 ![ecosystem](./docs/generated-diagrams/ecosystem/ecosystem.png)
