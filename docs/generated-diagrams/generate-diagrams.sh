@@ -1,35 +1,55 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-mkdir -p ecosystem
+generate_ecosystem_diagram() {
+  mkdir -p ecosystem
+  kubectl get all -A -o yaml | kube-diagrams -o ecosystem/ecosystem.png -
+}
 
-kubectl get all -A -o yaml | kube-diagrams -o ecosystem/ecosystem.png -
+generate_namespace_diagrams() {
+  namespaces=(
+    "cert-manager"
+    "default"
+    "external-dns"
+    "grafana-cloud"
+    "ingress-nginx"
+    "karpenter-loadtest"
+    "kube-node-lease"
+    "kube-public"
+    "kube-system"
+    "shop-staging"
+  )
 
-namespaces=("cert-manager" "default" "external-dns" "grafana-cloud" "ingress-nginx" "karpenter-loadtest" "kube-node-lease" "kube-public" "kube-system" "shop-staging")
-label_namespaces=("shop-staging") # Namespaces to process with labels
-labels=("carts" "catalog" "checkout" "orders" "ui")
-
-# Namespace based diagrams
-for namespace in "${namespaces[@]}"; do
-  output_dir="$namespace"
-  output_file="$output_dir/$namespace.png"
-
-  # Create the output directory if it doesn't exist
-  mkdir -p "$output_dir"
-
-  kubectl get all -n "$namespace" -o yaml | kube-diagrams -o "$output_file" -
-  echo "Diagram for $namespace saved to $output_file"
-done
-
-# Label based diagrams
-for namespace in "${label_namespaces[@]}"; do
-  for label in "${labels[@]}"; do
+  for namespace in "${namespaces[@]}"; do
     output_dir="$namespace"
-    output_file="$output_dir/${label}.png"
+    output_file="$output_dir/$namespace.png"
 
-    # Create the output directory if it doesn't exist
     mkdir -p "$output_dir"
-
-    kubectl get all -n "$namespace" -l "app.kubernetes.io/name=$label" -o yaml | kube-diagrams -o "$output_file" -
-    echo "Diagram for $label in $namespace saved to $output_file"
+    kubectl get all -n "$namespace" -o yaml | kube-diagrams -o "$output_file" -
+    echo "Diagram for $namespace saved to $output_file"
   done
-done
+}
+
+generate_shop_diagrams() {
+  shop_namespace="shop-staging"
+  labels=(
+    "carts"
+    "catalog"
+    "checkout"
+    "orders"
+    "ui"
+  )
+
+  mkdir -p "$shop_namespace"
+
+  for label in "${labels[@]}"; do
+    output_file="${shop_namespace}/${label}.png"
+
+    kubectl get all -n "$shop_namespace" -l "app.kubernetes.io/name=$label" -o yaml | kube-diagrams -o "$output_file" -
+    echo "Diagram for $label in $shop_namespace saved to $output_file"
+  done
+}
+
+# Generate the diagrams
+generate_ecosystem_diagram
+generate_namespace_diagrams
+generate_shop_diagrams
