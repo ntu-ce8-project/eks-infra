@@ -49,6 +49,24 @@ To contribute to the repository, follow our [contribution guidelines](/CONTRIBUT
 
 See all of our beautiful [diagrams](./docs/generated-diagrams/).
 
+Sequence diagram of Karpenter workflow.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant WF as GitHub Workflow
+    participant CC as create-cluster Job
+    participant KP as Karpenter Job
+    participant AWS as AWS Services
+
+    U->>WF: Trigger workflow (with Karpenter input)
+    WF->>CC: Run create-cluster job
+    CC->>AWS: Provision cluster and retrieve Karpenter config
+    WF-->>KP: Invoke Karpenter job (conditional)
+    KP->>AWS: Deploy Karpenter autoscaler
+    AWS-->>KP: Confirm deployment
+```
+
 This is the microservice architecture of the application.
 
 ![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
