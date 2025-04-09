@@ -62,7 +62,7 @@ jobs:
               echo "EC2NodeClass 'default' does not exist. Skipping deletion."
           fi
           # Define the target node count and maximum wait time
-          TARGET_NODE_COUNT=3
+          TARGET_NODE_COUNT=4  # Desired number of nodes
           MAX_WAIT_TIME=300  # Maximum wait time in seconds (5 minutes)
           START_TIME=$(date +%s)  # Record the start time
           # Function to get the current number of nodes
