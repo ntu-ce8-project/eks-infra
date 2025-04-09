@@ -34,14 +34,14 @@ module "eks" {
     eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni = {
-      most_recent    = true
-      before_compute = true
-      configuration_values = jsonencode({
-        env = {
-          ENABLE_PREFIX_DELEGATION = "true"
-          WARM_PREFIX_TARGET       = "1"
-        }
-      })
+      # most_recent    = true
+      # before_compute = true
+      # configuration_values = jsonencode({
+      #   env = {
+      #     ENABLE_PREFIX_DELEGATION = "true"
+      #     WARM_PREFIX_TARGET       = "1"
+      #   }
+      # })
     }
     aws-ebs-csi-driver = {
       service_account_role_arn = try(module.ebs_csi_driver_role[0].iam_role_arn, null)
@@ -63,9 +63,9 @@ module "eks" {
       # instance_types = ["t2.micro"] # too underpowered
       instance_types = ["t3.medium"]
 
-      min_size     = 3
+      min_size     = 4
       max_size     = 5
-      desired_size = 3
+      desired_size = 4
     }
   }
 
@@ -83,6 +83,36 @@ module "eks" {
     }
   }
 }
+
+module "karpenter" {
+  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
+  version = "20.34.0"
+
+  cluster_name                    = module.eks.cluster_name
+  enable_pod_identity             = true
+  create_pod_identity_association = true
+  namespace                       = "kube-system"
+  iam_role_name                   = "${local.prefix}-karpenter_controller"
+  iam_role_use_name_prefix        = false
+  iam_policy_name                 = "${local.prefix}-KarpenterControllerPolicy"
+  iam_policy_use_name_prefix      = false
+  iam_policy_description         = "Karpenter controller policy with all necessary permissions"
+  node_iam_role_name              = "${local.prefix}-KarpenterNodeRole"
+  node_iam_role_use_name_prefix   = false
+  node_iam_role_description       = "Karpenter node role with all necessary permissions"
+  # create_node_iam_role = false
+  # node_iam_role_arn    = module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn
+  queue_name                      = "${module.eks.cluster_name}"
+  # rule_name_prefix                = "${local.prefix}-karpenter"
+
+  node_iam_role_additional_policies = {
+    AmazonSSMManagedInstanceCore        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    AmazonEKS_CNI_Policy                = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+    AmazonEKSWorkerNodePolicy           = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+    AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  }
+}
+
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -103,5 +133,6 @@ module "vpc" {
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
+    "karpenter.sh/discovery" = "${local.prefix}-cluster"
   }
 }
