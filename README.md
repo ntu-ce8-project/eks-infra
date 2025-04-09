@@ -47,6 +47,8 @@ To contribute to the repository, follow our [contribution guidelines](/CONTRIBUT
 
 ## Architecture
 
+See all of our beautiful [diagrams](./docs/generated-diagrams/).
+
 This is the microservice architecture of the application.
 
 ![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
