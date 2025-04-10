@@ -9,6 +9,7 @@ namespace: shop-prod
 resources:
 - ../../base
 - namespace.yaml
+- hpa.yaml
 
 patches:
   - path: patches/letsencrypt-prod.yaml
