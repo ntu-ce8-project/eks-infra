@@ -8,8 +8,6 @@ locals {
     "mal1610-cohort8"
   ]
 
-  # merged_users_raw = data.aws_iam_group.ce8.users
-
   filtered_users = [
     for u in data.aws_iam_group.ce8.users : u
     if contains(local.allowed_usernames, u.user_name)
@@ -58,9 +56,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     CE8-G1-capstone-eks-ng = {
-      ami_type = "AL2023_x86_64_STANDARD"
-      # instance_types = ["m5.large"]
-      # instance_types = ["t2.micro"] # too underpowered
+      ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["t3.medium"]
 
       min_size     = 4
@@ -96,19 +92,15 @@ module "karpenter" {
   iam_role_use_name_prefix        = false
   iam_policy_name                 = "${local.prefix}-KarpenterControllerPolicy"
   iam_policy_use_name_prefix      = false
-  iam_policy_description         = "Karpenter controller policy with all necessary permissions"
+  iam_policy_description          = "Karpenter controller policy with all necessary permissions"
   node_iam_role_name              = "${local.prefix}-KarpenterNodeRole"
   node_iam_role_use_name_prefix   = false
   node_iam_role_description       = "Karpenter node role with all necessary permissions"
-  # create_node_iam_role = false
-  # node_iam_role_arn    = module.eks.eks_managed_node_groups["CE8-G1-capstone-eks-ng"].iam_role_arn
-  queue_name                      = "${module.eks.cluster_name}"
-  # rule_name_prefix                = "${local.prefix}-karpenter"
-
+  queue_name                      = module.eks.cluster_name
   node_iam_role_additional_policies = {
-    AmazonSSMManagedInstanceCore        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-    AmazonEKS_CNI_Policy                = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-    AmazonEKSWorkerNodePolicy           = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+    AmazonSSMManagedInstanceCore       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    AmazonEKS_CNI_Policy               = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+    AmazonEKSWorkerNodePolicy          = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
     AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   }
 }
@@ -133,6 +125,6 @@ module "vpc" {
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
-    "karpenter.sh/discovery" = "${local.prefix}-cluster"
+    "karpenter.sh/discovery"          = "${local.prefix}-cluster"
   }
 }
