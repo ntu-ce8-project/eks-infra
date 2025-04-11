@@ -67,6 +67,10 @@ sequenceDiagram
     AWS-->>KP: Confirm deployment
 ```
 
+This is the application architecture.
+
+![app](./docs/diagrams/app.drawio.svg)
+
 This is the microservice architecture of the application.
 
 ![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
