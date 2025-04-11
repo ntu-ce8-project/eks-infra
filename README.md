@@ -41,7 +41,26 @@ Track the progress of this project from our [issues](https://github.com/ntu-ce8-
 
 Read our [documentation](https://github.com/ntu-ce8-project/eks-infra/wiki).
 
-## Sequence diagram
+## Application architecture
+
+This is the application architecture.
+
+![app](./docs/diagrams/app.drawio.svg)
+
+This is the microservice architecture of the application. See all of our beautiful [diagrams](./docs/generated-diagrams/).
+
+![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
+
+## Cluster architecture
+
+This is the entire ecosystem of the cluster.
+
+![ecosystem](./docs/generated-diagrams/ecosystem/ecosystem.png)
+
+
+## Autoscaling in Kubernetes
+
+### Karpenter
 
 Sequence diagram of Karpenter workflow.
 
@@ -61,21 +80,9 @@ sequenceDiagram
     AWS-->>KP: Confirm deployment
 ```
 
-## Application architecture
+### Horizontal Pod Autoscaler (HPA)
 
-This is the application architecture.
-
-![app](./docs/diagrams/app.drawio.svg)
-
-This is the microservice architecture of the application. See all of our beautiful [diagrams](./docs/generated-diagrams/).
-
-![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
-
-## Cluster architecture
-
-This is the entire ecosystem of the cluster.
-
-![ecosystem](./docs/generated-diagrams/ecosystem/ecosystem.png)
+![image](https://github.com/user-attachments/assets/84d43ea7-61c0-4eca-aacf-6ab5191398f0)
 
 ## Contributors
 
