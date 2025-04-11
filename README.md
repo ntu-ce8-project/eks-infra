@@ -35,19 +35,13 @@
 
 ## Progress
 
-Track the progress of this project from our [kanban](https://github.com/orgs/ntu-ce8-project/projects/2) and project [milestones](https://github.com/ntu-ce8-project/eks-infra/milestones).
+Track the progress of this project from our [issues](https://github.com/ntu-ce8-project/eks-infra/issues?q=is%3Aissue%20state%3Aclosed), [kanban](https://github.com/orgs/ntu-ce8-project/projects/2), and [milestones](https://github.com/ntu-ce8-project/eks-infra/milestones?state=closed).
 
 ## Documentation
 
-For more details, read the [documentation](https://github.com/ntu-ce8-project/eks-infra/wiki).
+Read our [documentation](https://github.com/ntu-ce8-project/eks-infra/wiki).
 
-## Contributors
-
-To contribute to the repository, follow our [contribution guidelines](/CONTRIBUTING.md).
-
-## Architecture
-
-See all of our beautiful [diagrams](./docs/generated-diagrams/).
+## Sequence diagram
 
 Sequence diagram of Karpenter workflow.
 
@@ -67,14 +61,22 @@ sequenceDiagram
     AWS-->>KP: Confirm deployment
 ```
 
+## Application architecture
+
 This is the application architecture.
 
 ![app](./docs/diagrams/app.drawio.svg)
 
-This is the microservice architecture of the application.
+This is the microservice architecture of the application. See all of our beautiful [diagrams](./docs/generated-diagrams/).
 
 ![shop](./docs/generated-diagrams/shop-staging/shop-staging.png)
 
-This is the ecosystem of the entire cluster. It's massive!
+## Cluster architecture
+
+This is the entire ecosystem of the cluster.
 
 ![ecosystem](./docs/generated-diagrams/ecosystem/ecosystem.png)
+
+## Contributors
+
+To contribute to the repository, follow our [contribution guidelines](/CONTRIBUTING.md).
