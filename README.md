@@ -41,6 +41,12 @@ Track the progress of this project from our [issues](https://github.com/ntu-ce8-
 
 Read our [documentation](https://github.com/ntu-ce8-project/eks-infra/wiki).
 
+## Infrastructure architecture
+
+This is the infrastructure diagram.
+
+![infra](./docs/diagrams/infra.drawio.svg)
+
 ## Application architecture
 
 This is the application architecture.
@@ -56,7 +62,6 @@ This is the microservice architecture of the application. See all of our beautif
 This is the entire ecosystem of the cluster.
 
 ![ecosystem](./docs/generated-diagrams/ecosystem/ecosystem.png)
-
 
 ## Autoscaling in Kubernetes
 
