@@ -39,6 +39,8 @@ Track the progress of this project from our [issues](https://github.com/ntu-ce8-
 
 ## Documentation
 
+View our [slide deck](https://docs.google.com/presentation/d/e/2PACX-1vTMclgvtqjOGqXTai60vaI9ORleg5HHjL73u8lBNbqzfJ46VZ1nfzTGstDB93ewIuiQ55Ylkst00hxh/pub?start=true&loop=true&delayms=3000) for demo day.
+
 Read our [documentation](https://github.com/ntu-ce8-project/eks-infra/wiki).
 
 ## Infrastructure architecture
