@@ -33,6 +33,12 @@
   <img src="https://img.shields.io/badge/grafana-dashboards-orange?style=flat&logo=grafana">
 </p>
 
+## Demonstration of autoscaling
+
+[![asciicast](https://asciinema.org/a/A2u7MZFmNdVWRD3IoyATfGniI.svg)](https://asciinema.org/a/A2u7MZFmNdVWRD3IoyATfGniI)
+
+[![asciicast](https://asciinema.org/a/y8is4vDSkKsEBqUnM8uOSqBVM.svg)](https://asciinema.org/a/y8is4vDSkKsEBqUnM8uOSqBVM)
+
 ## Progress
 
 Track the progress of this project from our [issues](https://github.com/ntu-ce8-project/eks-infra/issues?q=is%3Aissue%20state%3Aclosed), [kanban](https://github.com/orgs/ntu-ce8-project/projects/2), and [milestones](https://github.com/ntu-ce8-project/eks-infra/milestones?state=closed).
