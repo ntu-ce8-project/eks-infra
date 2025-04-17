@@ -1,12 +1,15 @@
+locals {
+  # Ignored when create_oidc_provider is set to true
+  account_id = data.aws_caller_identity.current.account_id
+  oidc_provider_arn = "arn:aws:iam::${local.account_id}:oidc-provider/token.actions.githubusercontent.com"
+}
+
 module "github-oidc" {
   source  = "terraform-module/github-oidc-provider/aws"
   version = "~> 2.2.1"
 
-# if you want to create the OIDC provider for GitHub Actions, set this to true
-  create_oidc_provider = true
-# if you want to attac an existing OIDC provider for GitHub Actions, set this to false and provide the ARN
-#   create_oidc_provider = false
-#   oidc_provider_arn    = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
+  create_oidc_provider = var.create_oidc_provider
+  oidc_provider_arn    = local.oidc_provider_arn
   
   create_oidc_role     = true
 
